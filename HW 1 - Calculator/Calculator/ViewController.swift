@@ -27,20 +27,21 @@ class ViewController: UIViewController {
     
     @IBAction func touchDigit(_ sender: UIButton) {
         let digit = sender.currentTitle!
-        let textCurrentlyInDisplay = display.text!
-        var displayText = ""
-        if userIsInTheMiddleOfTyping {
-            displayText = textCurrentlyInDisplay + digit
-        } else if !userIsInTheMiddleOfTyping && digit == "." {
-            displayText = "0."
-        }else {
-            displayText = digit
+        let text = displayText(for: digit)
+        if CalculatorBrain.isNumber(text) {
+            userIsInTheMiddleOfTyping = true
+            display.text = text
         }
-        if CalculatorBrain.isNumber(displayText) {
-            if !userIsInTheMiddleOfTyping {
-                userIsInTheMiddleOfTyping = true
-            }
-            display.text = displayText
+    }
+    
+    private func displayText(for digit: String) -> String {
+        if userIsInTheMiddleOfTyping {
+            let textCurrentlyInDisplay = display.text!
+            return textCurrentlyInDisplay + digit
+        } else if digit == "." {
+            return  "0."
+        } else {
+            return digit
         }
     }
     
@@ -66,11 +67,7 @@ class ViewController: UIViewController {
     }
     
     private func displayHistory() {
-        if let description = brain.description {
-            history.text = brain.resultIsPending ? description + " …" : description + " ="
-        } else {
-            history.text = " "
-        }
+        history.text = brain.resultIsPending ? brain.description + " …" : brain.description + " ="
     }
     
     // MARK: - UI Style
