@@ -37,7 +37,7 @@ class ViewController: UIViewController {
     private func displayText(for digit: String) -> String {
         if userIsInTheMiddleOfTyping {
             let textCurrentlyInDisplay = display.text!
-            return textCurrentlyInDisplay + digit
+            return textCurrentlyInDisplay == "0" ? digit : textCurrentlyInDisplay + digit
         } else if digit == "." {
             return  "0."
         } else {
@@ -70,7 +70,10 @@ class ViewController: UIViewController {
         if let text = display.text, text != "" {
             let truncatedText = text.substring(to: text.index(before: text.endIndex))
             if truncatedText == "" {
-                displayValue = 0.0
+                brain.setOperand(0.0)
+                if let result = brain.result {
+                    displayValue = result
+                }
             } else  {
                 display.text = truncatedText
             }

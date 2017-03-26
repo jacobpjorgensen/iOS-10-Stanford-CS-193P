@@ -76,12 +76,14 @@ struct CalculatorBrain {
     }
     
     private var unaryDescription = ""
+    private var unaryPerformed = false
     
     private mutating func performUnary(function: (Double) -> Double, with symbol: String) {
         if accumulator != nil {
             if resultIsPending {
                 description = unaryDescription + " \(symbol)(\(accumulator!.description))"
-                accumulator = (function(accumulator!.value), "")
+                accumulator = (function(accumulator!.value), "\(symbol)(\(accumulator!.description))")
+                unaryPerformed = true
             } else {
                 accumulator = (function(accumulator!.value), "\(symbol)(\(accumulator!.description))")
                 description = accumulator!.description
@@ -107,9 +109,14 @@ struct CalculatorBrain {
     private mutating func performPendingBinaryOperation() {
         if pendingBinaryOperation != nil && accumulator != nil {
             let result = pendingBinaryOperation!.perform(with: accumulator!.value)
-            accumulator = (result, description + "\(accumulator!.description)")
+            if unaryPerformed {
+                accumulator = (result, unaryDescription + " " + accumulator!.description)
+            } else {
+                accumulator = (result, description + "\(accumulator!.description)")
+            }
             description = accumulator!.description
             pendingBinaryOperation = nil
+            unaryPerformed = false
         }
     }
     
@@ -121,7 +128,7 @@ struct CalculatorBrain {
     
     static func format(double: Double) -> String {
         let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 0
+        formatter.minimumIntegerDigits = 1
         formatter.maximumFractionDigits = 6
         let numberValue = NSNumber(value: double)
         return formatter.string(from: numberValue) ?? String(double)
