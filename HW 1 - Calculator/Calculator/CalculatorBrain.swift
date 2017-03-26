@@ -75,10 +75,12 @@ struct CalculatorBrain {
         }
     }
     
+    private var unaryDescription = ""
+    
     private mutating func performUnary(function: (Double) -> Double, with symbol: String) {
         if accumulator != nil {
             if resultIsPending {
-                description = description + " \(symbol)(\(accumulator!.description))"
+                description = unaryDescription + " \(symbol)(\(accumulator!.description))"
                 accumulator = (function(accumulator!.value), "")
             } else {
                 accumulator = (function(accumulator!.value), "\(symbol)(\(accumulator!.description))")
@@ -92,6 +94,7 @@ struct CalculatorBrain {
             if resultIsPending { performPendingBinaryOperation() }
             pendingBinaryOperation = PendingBinaryOperation(function: function, firstOperand: accumulator!.value)
             description = accumulator!.description + " \(symbol) "
+            unaryDescription = description
             accumulator = nil
         }
     }
