@@ -61,6 +61,7 @@ struct CalculatorBrain {
     
     mutating func setOperand(_ operand: Double) {
         accumulator = (operand, CalculatorBrain.doubleToString(operand))
+        description = accumulator!.description
     }
     
     mutating func performOperation(_ symbol: String) {
@@ -75,15 +76,14 @@ struct CalculatorBrain {
         }
     }
     
-    private var unaryDescription = ""
+    private var firstOperandDescription = ""
     private var unaryPerformed = false
     
     private mutating func performUnary(function: (Double) -> Double, with symbol: String) {
         if accumulator != nil {
             if resultIsPending {
-                description = unaryDescription + " \(symbol)(\(accumulator!.description))"
                 accumulator = (function(accumulator!.value), "\(symbol)(\(accumulator!.description))")
-                unaryPerformed = true
+                description = firstOperandDescription + " \(accumulator!.description)"
             } else {
                 accumulator = (function(accumulator!.value), "\(symbol)(\(accumulator!.description))")
                 description = accumulator!.description
@@ -96,28 +96,23 @@ struct CalculatorBrain {
             if resultIsPending { performPendingBinaryOperation() }
             pendingBinaryOperation = PendingBinaryOperation(function: function, firstOperand: accumulator!.value)
             description = accumulator!.description + " \(symbol) "
-            unaryDescription = accumulator!.description + " \(symbol)"
+            firstOperandDescription = accumulator!.description + " \(symbol)"
             accumulator = nil
+        }
+    }
+    
+    private mutating func performPendingBinaryOperation() {
+        if pendingBinaryOperation != nil && accumulator != nil {
+            let result = pendingBinaryOperation!.perform(with: accumulator!.value)
+            accumulator = (result, firstOperandDescription + " " + accumulator!.description)
+            description = accumulator!.description
+            pendingBinaryOperation = nil
         }
     }
     
     private mutating func setRandomOperand() {
         let randomDouble = Double(arc4random()) / Double(UInt32.max)
         setOperand(randomDouble)
-    }
-    
-    private mutating func performPendingBinaryOperation() {
-        if pendingBinaryOperation != nil && accumulator != nil {
-            let result = pendingBinaryOperation!.perform(with: accumulator!.value)
-            if unaryPerformed {
-                accumulator = (result, unaryDescription + " " + accumulator!.description)
-            } else {
-                accumulator = (result, description + "\(accumulator!.description)")
-            }
-            description = accumulator!.description
-            pendingBinaryOperation = nil
-            unaryPerformed = false
-        }
     }
     
     // MARK: - Number Formatting
