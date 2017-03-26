@@ -94,7 +94,7 @@ struct CalculatorBrain {
             if resultIsPending { performPendingBinaryOperation() }
             pendingBinaryOperation = PendingBinaryOperation(function: function, firstOperand: accumulator!.value)
             description = accumulator!.description + " \(symbol) "
-            unaryDescription = description
+            unaryDescription = accumulator!.description + " \(symbol)"
             accumulator = nil
         }
     }
