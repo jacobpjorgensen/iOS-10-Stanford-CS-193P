@@ -54,9 +54,7 @@ class ViewController: UIViewController {
             brain.performOperation(mathematicalSymbol)
             displayHistory()
         }
-        if let result = brain.result {
-            displayValue = result
-        }
+        displayResult()
     }
     
     @IBAction func resetCalculator(_ sender: UIButton) {
@@ -71,12 +69,16 @@ class ViewController: UIViewController {
             let truncatedText = text.substring(to: text.index(before: text.endIndex))
             if truncatedText == "" {
                 brain.setOperand(0.0)
-                if let result = brain.result {
-                    displayValue = result
-                }
+                displayResult()
             } else  {
                 display.text = truncatedText
             }
+        }
+    }
+    
+    private func displayResult() {
+        if let result = brain.result {
+            displayValue = result
         }
     }
     
