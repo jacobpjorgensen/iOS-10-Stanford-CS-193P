@@ -66,8 +66,21 @@ class ViewController: UIViewController {
         brain = CalculatorBrain()
     }
     
+    @IBAction func backspace(_ sender: UIButton) {
+        if let text = display.text, text != "" {
+            let truncatedText = text.substring(to: text.index(before: text.endIndex))
+            if truncatedText == "" {
+                displayValue = 0.0
+            } else  {
+                display.text = truncatedText
+            }
+        }
+    }
+    
     private func displayHistory() {
-        history.text = brain.resultIsPending ? brain.description + " …" : brain.description + " ="
+        if brain.description != "" {
+            history.text = brain.resultIsPending ? brain.description + " …" : brain.description + " ="
+        }
     }
     
     // MARK: - UI Style

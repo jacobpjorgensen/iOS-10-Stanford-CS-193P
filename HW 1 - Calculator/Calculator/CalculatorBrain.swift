@@ -27,21 +27,27 @@ struct CalculatorBrain {
         case unaryOperation((Double) -> Double)
         case binaryOperation((Double, Double) -> Double)
         case equals
+        case random
     }
     
     private var operations: Dictionary<String, Operation> = [
         "π" : Operation.constant(Double.pi),
         "e" : Operation.constant(M_E),
+        "ln" : Operation.unaryOperation(log),
         "√" : Operation.unaryOperation(sqrt),
+        "±" : Operation.unaryOperation({ -$0 }),
         "sin" : Operation.unaryOperation(sin),
         "cos" : Operation.unaryOperation(cos),
         "tan" : Operation.unaryOperation(tan),
-        "±" : Operation.unaryOperation({ -$0 }),
+        "sinh" : Operation.unaryOperation(sinh),
+        "cosh" : Operation.unaryOperation(cosh),
+        "tanh" : Operation.unaryOperation(tanh),
         "÷" : Operation.binaryOperation({ $0 / $1 }),
         "×" : Operation.binaryOperation({ $0 * $1 }),
         "−" : Operation.binaryOperation({ $0 - $1 }),
         "+" : Operation.binaryOperation({ $0 + $1 }),
-        "=" : Operation.equals
+        "=" : Operation.equals,
+        "?" : Operation.random
     ]
     
     private struct PendingBinaryOperation {
@@ -60,10 +66,11 @@ struct CalculatorBrain {
     mutating func performOperation(_ symbol: String) {
         if let operation = operations[symbol] {
             switch operation {
-            case .constant(let value): accumulator = (value, symbol)
+            case .constant(let value): accumulator = (value: value, description: symbol)
             case .unaryOperation(let function): performUnary(function: function, with: symbol)
             case .binaryOperation(let function): performBinary(function: function, with: symbol)
             case .equals: performPendingBinaryOperation()
+            case .random: setRandomOperand()
             }
         }
     }
@@ -89,6 +96,11 @@ struct CalculatorBrain {
         }
     }
     
+    private mutating func setRandomOperand() {
+        let randomDouble = Double(arc4random()) / Double(UInt32.max)
+        setOperand(randomDouble)
+    }
+    
     private mutating func performPendingBinaryOperation() {
         if pendingBinaryOperation != nil && accumulator != nil {
             let result = pendingBinaryOperation!.perform(with: accumulator!.value)
@@ -101,7 +113,15 @@ struct CalculatorBrain {
     // MARK: - Number Formatting
     
     static func doubleToString(_ value: Double) -> String {
-        return isConvertableToInt(value) ? String(Int(value)) : String(value)
+        return isConvertableToInt(value) ? String(Int(value)) : format(double: value)
+    }
+    
+    static func format(double: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 6
+        let numberValue = NSNumber(value: double)
+        return formatter.string(from: numberValue) ?? String(double)
     }
     
     static func isNumber(_ string: String) -> Bool {
@@ -121,5 +141,5 @@ struct CalculatorBrain {
     static func isWholeNumber(_ double: Double) -> Bool {
         return double.truncatingRemainder(dividingBy: 1) == 0
     }
-
+    
 }
