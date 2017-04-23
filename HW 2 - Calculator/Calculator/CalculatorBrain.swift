@@ -35,6 +35,8 @@ struct CalculatorBrain {
         "e" : Operation.constant(M_E),
         "ln" : Operation.unaryOperation(log),
         "√" : Operation.unaryOperation(sqrt),
+        "log₂" : Operation.unaryOperation(log2),
+        "log₁₀" : Operation.unaryOperation(log10),
         "±" : Operation.unaryOperation({ -$0 }),
         "sin" : Operation.unaryOperation(sin),
         "cos" : Operation.unaryOperation(cos),
@@ -62,6 +64,18 @@ struct CalculatorBrain {
     mutating func setOperand(_ operand: Double) {
         accumulator = (operand, CalculatorBrain.doubleToString(operand))
         description = accumulator!.description
+    }
+    
+    var variables: Dictionary<String, Double>?
+    
+    mutating func setOperand(variable named: String) {
+        variables?[named] = 0.0
+        accumulator = (0.0, named)
+    }
+    
+    func evaluate(using variables: Dictionary<String, Double>? = nil) -> (result: Double?, isPending: Bool, description: String) {
+        // TODO: Get evaulate working
+        return (result, resultIsPending, description)
     }
     
     mutating func performOperation(_ symbol: String) {

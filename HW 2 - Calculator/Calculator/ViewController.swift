@@ -12,6 +12,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var history: UILabel!
     @IBOutlet weak var display: UILabel!
+    @IBOutlet weak var variableLabel: UILabel!
     
     private var userIsInTheMiddleOfTyping = false
     private var brain = CalculatorBrain()
@@ -57,11 +58,37 @@ class ViewController: UIViewController {
         displayResult()
     }
     
+    @IBAction func clearVariable(_ sender: UIButton) {
+        brain.variables = nil
+    }
+    
+    // →M
+    @IBAction func setVariable(_ sender: UIButton) {
+        variableLabel.text = "M = \(CalculatorBrain.doubleToString(displayValue))"
+        let result = brain.evaluate(using: ["M": displayValue])
+        updateUI(with: result)
+    }
+    
+    // M
+    @IBAction func getVariable(_ sender: UIButton) {
+        brain.setOperand(variable: "M")
+        let result = brain.evaluate(using: ["M": displayValue])
+        updateUI(with: result)
+    }
+    
+    private func updateUI(with result: (result: Double?, isPending: Bool, description: String)) {
+        history.text = result.isPending ? result.description + " …" : result.description + " ="
+        if let value = result.result {
+            displayValue = value
+        }
+    }
+    
     @IBAction func resetCalculator(_ sender: UIButton) {
         displayValue = 0
         history.text = " "
         userIsInTheMiddleOfTyping = false
         brain = CalculatorBrain()
+        variableLabel.text = " "
     }
     
     @IBAction func backspace(_ sender: UIButton) {
