@@ -10,9 +10,9 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var variableLabel: UILabel!
     @IBOutlet weak var history: UILabel!
     @IBOutlet weak var display: UILabel!
-    @IBOutlet weak var variableLabel: UILabel!
     
     private var userIsInTheMiddleOfTyping = false
     private var brain = CalculatorBrain()
@@ -80,7 +80,6 @@ class ViewController: UIViewController {
     // M
     @IBAction func getVariable(_ sender: UIButton) {
         brain.setOperand(variable: "M")
-        print(mVariable)
         let result = brain.evaluate(using: mVariable)
         updateUI(with: result)
     }
@@ -110,6 +109,11 @@ class ViewController: UIViewController {
                 display.text = truncatedText
             }
         }
+    }
+    
+    @IBAction func setRandomNumber(_ sender: UIButton) {
+        userIsInTheMiddleOfTyping = true
+        display.text = CalculatorBrain.doubleToString(Double(arc4random()) / Double(UInt32.max))
     }
     
     private func displayResult() {

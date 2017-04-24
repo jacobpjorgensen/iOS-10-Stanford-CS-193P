@@ -28,7 +28,7 @@ class CalculatorTests: XCTestCase {
     func testDigitOp() {
         viewController.touchDigit(createButton(title: "7"))
         viewController.performOperation(createButton(title: "+"))
-        XCTAssertEqual(viewController.display.text!, "7", "Display text is wron")
+        XCTAssertEqual(viewController.display.text!, "7", "Display text is wrong")
         XCTAssertEqual(viewController.history.text!, "7 + …", "History text is wrong")
     }
     

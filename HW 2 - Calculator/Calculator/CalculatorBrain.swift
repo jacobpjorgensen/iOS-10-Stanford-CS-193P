@@ -10,83 +10,119 @@ import Foundation
 
 struct CalculatorBrain {
     
-    var result: Double? {
-        get { return evaluate().result }
+    // MARK: - Depricated Public Variables
+    
+    var result: Double? { get { return evaluate().result } }
+    var description: String { get { return evaluate().description } }
+    var resultIsPending: Bool { get { return evaluate().isPending } }
+    
+    // MARK: - Public Functions
+    
+    mutating func setOperand(_ operand: Double) {
+        history.append(CalculatorBrain.doubleToString(operand))
     }
     
-    var description: String {
-        get { return evaluate().description }
+    mutating func setOperand(variable named: String) {
+        history.append(named)
     }
     
-    var resultIsPending: Bool {
-        get { return evaluate().isPending }
+    func evaluate(using variables: Dictionary<String, Double>? = nil) -> (result: Double?, isPending: Bool, description: String) {
+        var result = 0.0
+        var description = ""
+        var pendingBinaryOperation: PendingBinaryOperation?
+        var pendingBinaryDescription: PendingBinaryDescription?
+        
+        func perform(constant: (value: Double, description: String)) {
+            result = constant.value
+            performPendingBinaryDescription(with: constant.description)
+        }
+        
+        func perform(unary: (resultFunction: (Double) -> Double, descriptionFunction: (String) -> String)) {
+            result = unary.resultFunction(result)
+            performPendingBinaryDescription(with: unary.descriptionFunction(description))
+        }
+        
+        func perform(binary: (resultFunction: (Double, Double) -> Double, descriptionFunction: (String, String) -> String), op: String) {
+            performPendingBinaryOperation(with: result)
+            pendingBinaryOperation = PendingBinaryOperation(function: binary.resultFunction, firstOperand: result)
+            performPendingBinaryDescription(with: description)
+            pendingBinaryDescription = PendingBinaryDescription(function: binary.descriptionFunction, firstOperand: description)
+            description += " \(op)"
+        }
+        
+        func performEquals() {
+            performPendingBinaryOperation(with: result)
+            performPendingBinaryDescription(with: description)
+        }
+        
+        func performPendingBinaryOperation(with parameter: Double) {
+            result = pendingBinaryOperation != nil ? pendingBinaryOperation!.perform(with: parameter) : parameter
+            pendingBinaryOperation = nil
+        }
+        
+        func performPendingBinaryDescription(with paramenter: String) {
+            description = pendingBinaryDescription != nil ? pendingBinaryDescription!.perform(with: paramenter) : paramenter
+            pendingBinaryDescription = nil
+        }
+        
+        for item in history {
+            if let variable = variables?[item] {
+                result = variable
+                description = item
+            } else if let operation = operations[item] {
+                switch operation {
+                case .constant(let constant): perform(constant: constant)
+                case .unaryOperation(let function): perform(unary: function)
+                case .binaryOperation(let function): perform(binary: function, op: item)
+                case .equals: performEquals()
+                }
+            } else {
+                result = Double(item) ?? 0.0
+                // Assumes variables are never doubles, if otherwise change this if-else to just 'description = item'
+                if Double(item) != nil {
+                    description = item
+                } else {
+                    performPendingBinaryDescription(with: item)
+                }
+            }
+        }
+        return (result, pendingBinaryOperation != nil, description)
     }
     
-    private var accumulator: (value: Double, description: String)?
-    private var pendingBinaryOperation: PendingBinaryOperation?
+    mutating func performOperation(_ symbol: String) {
+        history.append(symbol)
+    }
+    
+    // MARK: - Private Implementation
+
+    private var history: [String] = []
     
     private enum Operation {
-        case constant(Double)
-        case unaryOperation((Double) -> Double)
-        case binaryOperation((Double, Double) -> Double)
+        case constant(Double, String)
+        case unaryOperation((Double) -> Double, (String) -> String)
+        case binaryOperation((Double, Double) -> Double, (String, String) -> String)
         case equals
-        case random
     }
     
     private var operations: Dictionary<String, Operation> = [
-        "π" : Operation.constant(Double.pi),
-        "e" : Operation.constant(M_E),
-        "ln" : Operation.unaryOperation(log),
-        "√" : Operation.unaryOperation(sqrt),
-        "log₂" : Operation.unaryOperation(log2),
-        "log₁₀" : Operation.unaryOperation(log10),
-        "±" : Operation.unaryOperation({ -$0 }),
-        "sin" : Operation.unaryOperation(sin),
-        "cos" : Operation.unaryOperation(cos),
-        "tan" : Operation.unaryOperation(tan),
-        "sinh" : Operation.unaryOperation(sinh),
-        "cosh" : Operation.unaryOperation(cosh),
-        "tanh" : Operation.unaryOperation(tanh),
-        "÷" : Operation.binaryOperation({ $0 / $1 }),
-        "×" : Operation.binaryOperation({ $0 * $1 }),
-        "−" : Operation.binaryOperation({ $0 - $1 }),
-        "+" : Operation.binaryOperation({ $0 + $1 }),
-        "=" : Operation.equals,
-        "?" : Operation.random
-    ]
-    
-    private enum OperationDescription {
-        case constant(String)
-        case unaryOperation((String) -> String)
-        case binaryOperation((String, String) -> String)
-        case equals
-        case random(() -> String)
-    }
-    
-    private var operationDescriptions: Dictionary<String, OperationDescription> = [
-        "π" : OperationDescription.constant("π"),
-        "e" : OperationDescription.constant("e"),
-        "ln" : OperationDescription.unaryOperation({"log(\($0))"}),
-        "√" : OperationDescription.unaryOperation({"√(\($0))"}),
-        "log₂" : OperationDescription.unaryOperation({"log₂(\($0))"}),
-        "log₁₀" : OperationDescription.unaryOperation({"log₁₀(\($0))"}),
-        "±" : OperationDescription.unaryOperation({
-            let inverseDescription = -(Double($0) ?? 0.0)
-            return CalculatorBrain.isConvertableToInt(inverseDescription) ? CalculatorBrain.format(double: inverseDescription) : String(inverseDescription)
-        }),
-        "sin" : OperationDescription.unaryOperation({"sin(\($0))"}),
-        "cos" : OperationDescription.unaryOperation({"cos(\($0))"}),
-        "tan" : OperationDescription.unaryOperation({"tan(\($0))"}),
-        "sinh" : OperationDescription.unaryOperation({"sinh(\($0))"}),
-        "cosh" : OperationDescription.unaryOperation({"cosh(\($0))"}),
-        "tanh" : OperationDescription.unaryOperation({"tanh(\($0))"}),
-        "÷" : OperationDescription.binaryOperation({"\($0) ÷ \($1)"}),
-        "×" : OperationDescription.binaryOperation({"\($0) × \($1)"}),
-        "−" : OperationDescription.binaryOperation({"\($0) − \($1)"}),
-        "+" : OperationDescription.binaryOperation({"\($0) + \($1)"}),
-        "=" : OperationDescription.equals,
-        "?" : OperationDescription.random({"\($0)"
-        })
+        "π" : Operation.constant(Double.pi, "π"),
+        "e" : Operation.constant(M_E, "e"),
+        "ln" : Operation.unaryOperation(log, {"log(\($0))"}),
+        "√" : Operation.unaryOperation(sqrt, {"√(\($0))"}),
+        "log₂" : Operation.unaryOperation(log2, {"log₂(\($0))"}),
+        "log₁₀" : Operation.unaryOperation(log10, {"log₁₀(\($0))"}),
+        "±" : Operation.unaryOperation({-$0}, {"-(\($0))"}),
+        "sin" : Operation.unaryOperation(sin, {"sin(\($0))"}),
+        "cos" : Operation.unaryOperation(cos, {"cos(\($0))"}),
+        "tan" : Operation.unaryOperation(tan, {"tan(\($0))"}),
+        "sinh" : Operation.unaryOperation(sinh, {"sinh(\($0))"}),
+        "cosh" : Operation.unaryOperation(cosh, {"cosh(\($0))"}),
+        "tanh" : Operation.unaryOperation(tanh, {"tanh(\($0))"}),
+        "÷" : Operation.binaryOperation(/, {"\($0) ÷ \($1)"}),
+        "×" : Operation.binaryOperation(*, {"\($0) × \($1)"}),
+        "−" : Operation.binaryOperation(-, {"\($0) − \($1)"}),
+        "+" : Operation.binaryOperation(+, {"\($0) + \($1)"}),
+        "=" : Operation.equals
     ]
     
     private struct PendingBinaryOperation {
@@ -105,114 +141,6 @@ struct CalculatorBrain {
         func perform(with secondOperand: String) -> String {
             return function(firstOperand, secondOperand)
         }
-    }
-    
-    private var variables: Dictionary<String, Double>?
-    private var history: [String] = []
-    
-    mutating func setOperand(_ operand: Double) {
-        history.append(CalculatorBrain.doubleToString(operand))
-    }
-    
-    mutating func setOperand(variable named: String) {
-        variables?[named] = 0.0
-        history.append(named)
-    }
-    
-    private var randomNumber = 0.0
-    
-    func evaluate(using variables: Dictionary<String, Double>? = nil) -> (result: Double?, isPending: Bool, description: String) {
-        var result = 0.0
-        var description = ""
-        var pendingBinaryOperation: PendingBinaryOperation?
-        var pendingBinaryDescription: PendingBinaryDescription?
-        
-        for item in history {
-            if let variable = variables?[item] {
-                result = variable
-                description = item
-            } else if operations[item] != nil {
-                
-                // Result
-                switch operations[item]! {
-                case .constant(let constant): result = constant
-                case .unaryOperation(let function): result = function(result)
-                case .binaryOperation(let function):
-                    if let pendingBinaryOperation = pendingBinaryOperation {
-                        result = pendingBinaryOperation.perform(with: result)
-                    }
-                    pendingBinaryOperation = PendingBinaryOperation(function: function, firstOperand: result)
-                case .equals:
-                    if let pendingBinaryOperation = pendingBinaryOperation {
-                        result = pendingBinaryOperation.perform(with: result)
-                    }
-                    pendingBinaryOperation = nil
-                case .random: break
-                }
-                
-                // Description
-                switch operationDescriptions[item]! {
-                case .constant(let constant):
-                    if let pending = pendingBinaryDescription {
-                        description = pending.perform(with: constant)
-                        pendingBinaryDescription = nil
-                    } else {
-                        description = constant
-                    }
-                case .unaryOperation(let function):
-                    if let pending = pendingBinaryDescription {
-                        description = pending.perform(with: function(description))
-                        pendingBinaryDescription = nil
-                    } else {
-                        description = function(description)
-                    }
-                case .binaryOperation(let function):
-                    if let pending = pendingBinaryDescription {
-                        description = pending.perform(with: description)
-                    }
-                    pendingBinaryDescription = PendingBinaryDescription(function: function, firstOperand: description)
-                    description += " \(item)"
-                case .equals:
-                    if let pending = pendingBinaryDescription {
-                        description = pending.perform(with: description)
-                    }
-                    pendingBinaryDescription = nil
-                case .random: break
-                }
-                
-            } else {
-                result = Double(item) ?? 0.0
-                description = item
-            }
-        }
-        return (result, pendingBinaryOperation != nil, description)
-    }
-    
-    mutating func performOperation(_ symbol: String) {
-        history.append(symbol)
-    }
-    
-//    private func performUnary(function: (Double) -> Double, with parameter: Double) -> (result: Double, description: String) {
-//        return resultIsPending ? function(parameter) : 0.0
-//    }
-//    
-//    private mutating func performBinary(function: @escaping (Double, Double) -> Double, with symbol: String) {
-//        if accumulator != nil {
-//            if resultIsPending { performPendingBinaryOperation() }
-//            pendingBinaryOperation = PendingBinaryOperation(function: function, firstOperand: accumulator!.value)
-//            firstOperandDescription = description
-//            accumulator = nil
-//        }
-//    }
-//    
-//    private mutating func performPendingBinaryOperation() {
-//        let result = pendingBinaryOperation!.perform(with: accumulator!.value)
-//        accumulator = (result, firstOperandDescription + " " + accumulator!.description)
-//        pendingBinaryOperation = nil
-//    }
-    
-    private mutating func setRandomNumber() {
-        randomNumber = Double(arc4random()) / Double(UInt32.max)
     }
     
     // MARK: - Number Formatting
