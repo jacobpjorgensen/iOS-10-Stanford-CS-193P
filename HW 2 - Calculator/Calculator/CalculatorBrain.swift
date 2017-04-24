@@ -78,7 +78,8 @@ struct CalculatorBrain {
                 }
             } else {
                 result = Double(item) ?? 0.0
-                // Assumes variables are never doubles, if otherwise change this if-else to just 'description = item'
+                // Assumes variables are never convertible to Double
+                // If otherwise, change this if-else to just 'description = item'
                 if Double(item) != nil {
                     description = item
                 } else {
