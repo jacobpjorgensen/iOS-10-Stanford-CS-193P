@@ -42,26 +42,12 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="kvf-EL-lxG" userLabel="Display Stack View">
                                                 <rect key="frame" x="0.0" y="64.5" width="375" height="95.5"/>
                                                 <subviews>
-                                                    <view contentMode="scaleToFill" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="QPo-D0-7QI" userLabel="Margin">
-                                                        <rect key="frame" x="0.0" y="0.0" width="16" height="95.5"/>
-                                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="16" id="vdo-pj-YWr"/>
-                                                        </constraints>
-                                                    </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="32" translatesAutoresizingMaskIntoConstraints="NO" id="cBs-fx-Plb">
-                                                        <rect key="frame" x="16" y="0.0" width="343" height="95.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="375" height="95.5"/>
                                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="80"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <view contentMode="scaleToFill" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="bZI-1o-SfS" userLabel="Margin">
-                                                        <rect key="frame" x="359" y="0.0" width="16" height="95.5"/>
-                                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="16" id="XeG-Yj-Xax"/>
-                                                        </constraints>
-                                                    </view>
                                                 </subviews>
                                             </stackView>
                                         </subviews>
@@ -92,7 +78,6 @@
                                                         </state>
                                                         <connections>
                                                             <action selector="clearVariable:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2s4-CT-A89"/>
-                                                            <action selector="performOperation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qA7-HD-2PA"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ugj-u1-L5a">

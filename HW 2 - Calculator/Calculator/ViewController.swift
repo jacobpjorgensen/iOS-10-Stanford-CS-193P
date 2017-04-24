@@ -58,21 +58,30 @@ class ViewController: UIViewController {
         displayResult()
     }
     
+    var mVariable: Dictionary<String, Double> = [:]
+    
     @IBAction func clearVariable(_ sender: UIButton) {
-        brain.variables = nil
+        mVariable = [:]
+        variableLabel.text = " "
+        let result = brain.evaluate(using: mVariable)
+        updateUI(with: result)
+        userIsInTheMiddleOfTyping = false
     }
     
     // →M
     @IBAction func setVariable(_ sender: UIButton) {
+        mVariable["M"] = displayValue
         variableLabel.text = "M = \(CalculatorBrain.doubleToString(displayValue))"
-        let result = brain.evaluate(using: ["M": displayValue])
+        let result = brain.evaluate(using: mVariable)
         updateUI(with: result)
+        userIsInTheMiddleOfTyping = false
     }
     
     // M
     @IBAction func getVariable(_ sender: UIButton) {
         brain.setOperand(variable: "M")
-        let result = brain.evaluate(using: ["M": displayValue])
+        print(mVariable)
+        let result = brain.evaluate(using: mVariable)
         updateUI(with: result)
     }
     
@@ -104,15 +113,13 @@ class ViewController: UIViewController {
     }
     
     private func displayResult() {
-        if let result = brain.result {
-            displayValue = result
-        }
+        let result = brain.evaluate(using: mVariable)
+        displayValue = result.result ?? 0.0
     }
     
     private func displayHistory() {
-        if brain.description != "" {
-            history.text = brain.resultIsPending ? brain.description + " …" : brain.description + " ="
-        }
+        let result = brain.evaluate(using: mVariable)
+        history.text = result.isPending ? result.description + " …" : result.description + " ="
     }
     
     // MARK: - UI Style
