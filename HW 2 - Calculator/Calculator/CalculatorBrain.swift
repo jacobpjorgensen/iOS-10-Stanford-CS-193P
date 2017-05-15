@@ -26,6 +26,12 @@ struct CalculatorBrain {
         history.append(named)
     }
     
+    mutating func undo() {
+        if !history.isEmpty {
+            history.removeLast()
+        }
+    }
+    
     func evaluate(using variables: Dictionary<String, Double>? = nil) -> (result: Double?, isPending: Bool, description: String) {
         var result = 0.0
         var description = ""
@@ -60,8 +66,8 @@ struct CalculatorBrain {
             pendingBinaryOperation = nil
         }
         
-        func performPendingBinaryDescription(with paramenter: String) {
-            description = pendingBinaryDescription != nil ? pendingBinaryDescription!.perform(with: paramenter) : paramenter
+        func performPendingBinaryDescription(with parameter: String) {
+            description = pendingBinaryDescription != nil ? pendingBinaryDescription!.perform(with: parameter) : parameter
             pendingBinaryDescription = nil
         }
         
@@ -78,7 +84,7 @@ struct CalculatorBrain {
                 }
             } else {
                 result = Double(item) ?? 0.0
-                // Assumes variables are never convertible to Double
+                // Assumes variable names (Ex: `M`) are never convertible to Double
                 // If otherwise, change this if-else to just 'description = item'
                 if Double(item) != nil {
                     description = item

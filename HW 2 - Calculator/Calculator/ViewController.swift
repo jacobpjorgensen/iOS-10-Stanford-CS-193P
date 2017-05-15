@@ -92,14 +92,24 @@ class ViewController: UIViewController {
     }
     
     @IBAction func resetCalculator(_ sender: UIButton) {
-        displayValue = 0
         history.text = " "
+        variableLabel.text = " " // Reset this? or does only CM reset it?
+        displayValue = 0
         userIsInTheMiddleOfTyping = false
         brain = CalculatorBrain()
-        variableLabel.text = " "
     }
     
-    @IBAction func backspace(_ sender: UIButton) {
+    @IBAction func undo(_ sender: UIButton) {
+        if userIsInTheMiddleOfTyping {
+            backspace()
+        } else {
+            brain.undo()
+            let result = brain.evaluate(using: mVariable)
+            updateUI(with: result)
+        }
+    }
+    
+    private func backspace() {
         if let text = display.text, text != "" {
             let truncatedText = text.substring(to: text.index(before: text.endIndex))
             if truncatedText == "" {

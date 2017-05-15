@@ -106,11 +106,11 @@
                                                         <rect key="frame" x="301" y="0.0" width="74" height="66.5"/>
                                                         <color key="backgroundColor" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="24"/>
-                                                        <state key="normal" title="←">
+                                                        <state key="normal" title="↺">
                                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
                                                         <connections>
-                                                            <action selector="backspace:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gda-pX-Uuy"/>
+                                                            <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VOe-AT-YUv"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
