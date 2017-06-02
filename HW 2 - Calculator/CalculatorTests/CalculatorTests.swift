@@ -25,19 +25,21 @@ class CalculatorTests: XCTestCase {
         viewController = nil
     }
     
+    // MARK: - Stanford Given Test Cases
+    
     func testDigitOp() {
         viewController.touchDigit(createButton(title: "7"))
         viewController.performOperation(createButton(title: "+"))
-        XCTAssertEqual(viewController.display.text!, "7", "Display text is wrong")
-        XCTAssertEqual(viewController.history.text!, "7 + …", "History text is wrong")
+        XCTAssertEqual(viewController.display.text!, "7", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "7 + …", "History text is \(viewController.history.text!)")
     }
     
     func testDigitOpDigit() {
         viewController.touchDigit(createButton(title: "7"))
         viewController.performOperation(createButton(title: "+"))
         viewController.touchDigit(createButton(title: "9"))
-        XCTAssertEqual(viewController.display.text!, "9", "Display text is wron")
-        XCTAssertEqual(viewController.history.text!, "7 + …", "History text is wrong")
+        XCTAssertEqual(viewController.display.text!, "9", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "7 + …", "History text is \(viewController.history.text!)")
     }
     
     func testDigitOpDigitEquals() {
@@ -45,8 +47,8 @@ class CalculatorTests: XCTestCase {
         viewController.performOperation(createButton(title: "+"))
         viewController.touchDigit(createButton(title: "9"))
         viewController.performOperation(createButton(title: "="))
-        XCTAssertEqual(viewController.display.text!, "16", "Display text is wron")
-        XCTAssertEqual(viewController.history.text!, "7 + 9 =", "History text is wrong")
+        XCTAssertEqual(viewController.display.text!, "16", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "7 + 9 =", "History text is \(viewController.history.text!)")
     }
     
     func testDigitOpDigitEqualsUnary() {
@@ -55,8 +57,8 @@ class CalculatorTests: XCTestCase {
         viewController.touchDigit(createButton(title: "9"))
         viewController.performOperation(createButton(title: "="))
         viewController.performOperation(createButton(title: "√"))
-        XCTAssertEqual(viewController.display.text!, "4", "Display text is wrong")
-        XCTAssertEqual(viewController.history.text!, "√(7 + 9) =", "History text is wrong")
+        XCTAssertEqual(viewController.display.text!, "4", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "√(7 + 9) =", "History text is \(viewController.history.text!)")
     }
     
     func testDigitOpDigitEqualsUnaryOpDigit() {
@@ -68,8 +70,8 @@ class CalculatorTests: XCTestCase {
         viewController.performOperation(createButton(title: "+"))
         viewController.touchDigit(createButton(title: "2"))
         viewController.performOperation(createButton(title: "="))
-        XCTAssertEqual(viewController.display.text!, "6", "Display text is wrong")
-        XCTAssertEqual(viewController.history.text!, "√(7 + 9) + 2 =", "History text is wrong")
+        XCTAssertEqual(viewController.display.text!, "6", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "√(7 + 9) + 2 =", "History text is \(viewController.history.text!)")
     }
     
     func testDigitOpDigitUnary() {
@@ -77,8 +79,8 @@ class CalculatorTests: XCTestCase {
         viewController.performOperation(createButton(title: "+"))
         viewController.touchDigit(createButton(title: "9"))
         viewController.performOperation(createButton(title: "√"))
-        XCTAssertEqual(viewController.display.text!, "3", "Display text is wrong")
-        XCTAssertEqual(viewController.history.text!, "7 + √(9) …", "History text is wrong")
+        XCTAssertEqual(viewController.display.text!, "3", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "7 + √(9) …", "History text is \(viewController.history.text!)")
     }
     
     func testDigitOpDigitUnaryEquals() {
@@ -87,8 +89,8 @@ class CalculatorTests: XCTestCase {
         viewController.touchDigit(createButton(title: "9"))
         viewController.performOperation(createButton(title: "√"))
         viewController.performOperation(createButton(title: "="))
-        XCTAssertEqual(viewController.display.text!, "10", "Display text is wrong")
-        XCTAssertEqual(viewController.history.text!, "7 + √(9) =", "History text is wrong")
+        XCTAssertEqual(viewController.display.text!, "10", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "7 + √(9) =", "History text is \(viewController.history.text!)")
     }
     
     func testDigitOpDigitEqualsOpDigitEqualsOpDigitEquals() {
@@ -102,8 +104,8 @@ class CalculatorTests: XCTestCase {
         viewController.performOperation(createButton(title: "+"))
         viewController.touchDigit(createButton(title: "3"))
         viewController.performOperation(createButton(title: "="))
-        XCTAssertEqual(viewController.display.text!, "25", "Display text is wrong")
-        XCTAssertEqual(viewController.history.text!, "7 + 9 + 6 + 3 =", "History text is wrong")
+        XCTAssertEqual(viewController.display.text!, "25", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "7 + 9 + 6 + 3 =", "History text is \(viewController.history.text!)")
     }
     
     func testDigitOpDigitEqualsUnaryDigitOpDigit() {
@@ -116,8 +118,8 @@ class CalculatorTests: XCTestCase {
         viewController.performOperation(createButton(title: "+"))
         viewController.touchDigit(createButton(title: "3"))
         viewController.performOperation(createButton(title: "="))
-        XCTAssertEqual(viewController.display.text!, "9", "Display text is wrong")
-        XCTAssertEqual(viewController.history.text!, "6 + 3 =", "History text is wrong")
+        XCTAssertEqual(viewController.display.text!, "9", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "6 + 3 =", "History text is \(viewController.history.text!)")
     }
     
     func testDigitOpDigitEqualsDigitDigit() {
@@ -127,8 +129,8 @@ class CalculatorTests: XCTestCase {
         viewController.performOperation(createButton(title: "="))
         viewController.touchDigit(createButton(title: "7"))
         viewController.touchDigit(createButton(title: "3"))
-        XCTAssertEqual(viewController.display.text!, "73", "Display text is wrong")
-        XCTAssertEqual(viewController.history.text!, "5 + 6 =", "History text is wrong")
+        XCTAssertEqual(viewController.display.text!, "73", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "5 + 6 =", "History text is \(viewController.history.text!)")
     }
     
     func testDigitOpConstantEquals() {
@@ -136,8 +138,8 @@ class CalculatorTests: XCTestCase {
         viewController.performOperation(createButton(title: "×"))
         viewController.performOperation(createButton(title: "π"))
         viewController.performOperation(createButton(title: "="))
-        XCTAssertEqual(viewController.display.text!, "12.566371", "Display text is wrong")
-        XCTAssertEqual(viewController.history.text!, "4 × π =", "History text is wrong")
+        XCTAssertEqual(viewController.display.text!, "12.566371", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "4 × π =", "History text is \(viewController.history.text!)")
     }
     
     func testDigitOpGetVariableEqualsUnary() {
@@ -175,6 +177,54 @@ class CalculatorTests: XCTestCase {
         viewController.performOperation(createButton(title: "="))
         XCTAssertEqual(viewController.display.text!, "18", "Display text is \(viewController.display.text!)")
         XCTAssertEqual(viewController.history.text!, "√(9 + M) + 14 =", "History text is \(viewController.history.text!)")
+    }
+    
+    // MARK: - Undo Test Cases
+    
+    func testDigitOpDigitEqualsUndo() {
+        viewController.touchDigit(createButton(title: "1"))
+        viewController.performOperation(createButton(title: "+"))
+        viewController.touchDigit(createButton(title: "2"))
+        viewController.performOperation(createButton(title: "="))
+        viewController.undo(createButton(title: "↺"))
+        XCTAssertEqual(viewController.display.text!, "2", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "1 + …", "History text is \(viewController.history.text!)")
+    }
+    
+    func testDigitOpDigitEqualsUndoUndo() {
+        viewController.touchDigit(createButton(title: "1"))
+        viewController.performOperation(createButton(title: "+"))
+        viewController.touchDigit(createButton(title: "2"))
+        viewController.performOperation(createButton(title: "="))
+        viewController.undo(createButton(title: "↺"))
+        viewController.undo(createButton(title: "↺"))
+        XCTAssertEqual(viewController.display.text!, "1", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, "1 + …", "History text is \(viewController.history.text!)")
+    }
+    
+    func testDigitOpDigitEqualsUndoUndoUndo() {
+        viewController.touchDigit(createButton(title: "1"))
+        viewController.performOperation(createButton(title: "+"))
+        viewController.touchDigit(createButton(title: "2"))
+        viewController.performOperation(createButton(title: "="))
+        viewController.undo(createButton(title: "↺"))
+        viewController.undo(createButton(title: "↺"))
+        viewController.undo(createButton(title: "↺"))
+        XCTAssertEqual(viewController.display.text!, "1", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, " ", "History text is \(viewController.history.text!)")
+    }
+    
+    func testDigitOpDigitEqualsUndoUndoUndoUndo() {
+        viewController.touchDigit(createButton(title: "1"))
+        viewController.performOperation(createButton(title: "+"))
+        viewController.touchDigit(createButton(title: "2"))
+        viewController.performOperation(createButton(title: "="))
+        viewController.undo(createButton(title: "↺"))
+        viewController.undo(createButton(title: "↺"))
+        viewController.undo(createButton(title: "↺"))
+        viewController.undo(createButton(title: "↺"))
+        XCTAssertEqual(viewController.display.text!, "0", "Display text is \(viewController.display.text!)")
+        XCTAssertEqual(viewController.history.text!, " ", "History text is \(viewController.history.text!)")
     }
     
     private func createButton(title: String) -> UIButton {

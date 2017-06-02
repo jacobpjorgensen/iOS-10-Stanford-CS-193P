@@ -35,6 +35,7 @@ struct CalculatorBrain {
     func evaluate(using variables: Dictionary<String, Double>? = nil) -> (result: Double?, isPending: Bool, description: String) {
         var result = 0.0
         var description = ""
+        var isPending = false
         var pendingBinaryOperation: PendingBinaryOperation?
         var pendingBinaryDescription: PendingBinaryDescription?
         
@@ -44,11 +45,13 @@ struct CalculatorBrain {
         }
         
         func perform(unary: (resultFunction: (Double) -> Double, descriptionFunction: (String) -> String)) {
+            if result == 0.0 && Double(description) != nil || description == "" { description = "0" }
             result = unary.resultFunction(result)
             performPendingBinaryDescription(with: unary.descriptionFunction(description))
         }
         
         func perform(binary: (resultFunction: (Double, Double) -> Double, descriptionFunction: (String, String) -> String), op: String) {
+            if result == 0.0 && Double(description) != nil || description == "" { description = "0" }
             performPendingBinaryOperation(with: result)
             pendingBinaryOperation = PendingBinaryOperation(function: binary.resultFunction, firstOperand: result)
             performPendingBinaryDescription(with: description)
@@ -70,7 +73,8 @@ struct CalculatorBrain {
             description = pendingBinaryDescription != nil ? pendingBinaryDescription!.perform(with: parameter) : parameter
             pendingBinaryDescription = nil
         }
-        
+
+        // We assume variable names (Ex: "M") are strings that are not convertible to Double
         for item in history {
             if let variable = variables?[item] {
                 result = variable
@@ -83,20 +87,41 @@ struct CalculatorBrain {
                 case .equals: performEquals()
                 }
             } else {
-                result = Double(item) ?? 0.0
-                // Assumes variable names (Ex: `M`) are never convertible to Double
-                // If otherwise, change this if-else to just 'description = item'
                 if Double(item) != nil {
-                    description = item
+                    if let lastInHistory = history.last, operations[lastInHistory] != nil || !isPending {
+                        description = item
+                    }
                 } else {
                     performPendingBinaryDescription(with: item)
                 }
+                result = Double(item) ?? 0.0
             }
+            // When undoing, we don't want to display an empty history
+            if operations[item] == nil && Double(item) != nil && history.count <= 1 {
+                description = " "
+            }
+            isPending = pendingBinaryOperation != nil
         }
-        return (result, pendingBinaryOperation != nil, description)
+        
+        return (result, isPending, description)
     }
     
     mutating func performOperation(_ symbol: String) {
+        if let lastInHistory = history.last {
+            if symbol == lastInHistory {
+                // Don't append to history if it is the same operation
+                return
+            }
+            if let result = result, symbol == "=", let lastOperation = operations[lastInHistory] {
+                // In the case of a sequence like '7' '+' '=', we should take what is in the display
+                // and use that as the second operand (even though the user wasn't in the middle of typing).
+                // In this case the description would be "7 + 7" with a result of 14.
+                switch lastOperation {
+                case .binaryOperation: setOperand(result)
+                default: break
+                }
+            }
+        }
         history.append(symbol)
     }
     

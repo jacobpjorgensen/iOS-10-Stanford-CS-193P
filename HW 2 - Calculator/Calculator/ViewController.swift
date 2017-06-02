@@ -89,11 +89,13 @@ class ViewController: UIViewController {
         if let value = result.result {
             displayValue = value
         }
+        clearHistoryIfNeeded(given: result)
     }
     
     @IBAction func resetCalculator(_ sender: UIButton) {
+        mVariable = [:]
         history.text = " "
-        variableLabel.text = " " // Reset this? or does only CM reset it?
+        variableLabel.text = " "
         displayValue = 0
         userIsInTheMiddleOfTyping = false
         brain = CalculatorBrain()
@@ -113,11 +115,20 @@ class ViewController: UIViewController {
         if let text = display.text, text != "" {
             let truncatedText = text.substring(to: text.index(before: text.endIndex))
             if truncatedText == "" {
-                brain.setOperand(0.0)
+                if history.text != " " {
+                    brain.setOperand(0.0)
+                }
                 displayResult()
+                userIsInTheMiddleOfTyping = false
             } else  {
                 display.text = truncatedText
             }
+        }
+    }
+    
+    private func clearHistoryIfNeeded(given result: (result: Double?, isPending: Bool, description: String)) {
+        if result.description == " " || result.description == "" {
+            history.text = " "
         }
     }
     
@@ -134,6 +145,7 @@ class ViewController: UIViewController {
     private func displayHistory() {
         let result = brain.evaluate(using: mVariable)
         history.text = result.isPending ? result.description + " …" : result.description + " ="
+        clearHistoryIfNeeded(given: result)
     }
     
     // MARK: - UI Style
