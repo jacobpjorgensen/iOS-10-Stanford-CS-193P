@@ -75,15 +75,10 @@ struct CalculatorBrain {
 
         // We assume variable names (Ex: "M") are strings that are not convertible to Double
         for (i, item) in history.enumerated() {
-            if let variable = variables?[item] {
-                result = variable
-                if i != history.count - 1 { /// Don't update the description if the last item is a number
-                    description = item
-                }
-            } else if let operation = operations[item] {
+            if let operation = operations[item] {
                 switch operation {
                 case .constant(let constant):
-                    if i != history.count - 1 {
+                    if i != history.count - 1 { /// Don't update the description if the last item is a number
                         description = item
                     }
                     perform(constant: constant)
@@ -91,18 +86,16 @@ struct CalculatorBrain {
                 case .binaryOperation(let function): perform(binary: function, op: item)
                 case .equals: performEquals()
                 }
-            } else if Double(item) != nil {
-                result = Double(item) ?? 0.0
+            } else {
                 if i != history.count - 1 { /// Don't update the description if the last item is a number
                     description = item
-                }
-            } else {
-                result = Double(item) ?? 0.0
-                if i != history.count - 1 {
-                    // If the last item is a variable, set it as the description
-                    description = item
-                } else if Double(item) == nil {
+                } else if Double(item) == nil { /// If a variable, ex: "M"
                     performPendingBinaryDescription(with: item)
+                }
+                if let variable = variables?[item] {
+                    result = variable
+                } else {
+                    result = Double(item) ?? 0.0
                 }
             }
             // When undoing, we don't want to display an empty history
@@ -175,10 +168,10 @@ struct CalculatorBrain {
         "sinh" : Operation.unaryOperation(sinh, {"sinh(\($0))"}),
         "cosh" : Operation.unaryOperation(cosh, {"cosh(\($0))"}),
         "tanh" : Operation.unaryOperation(tanh, {"tanh(\($0))"}),
-        "÷" : Operation.binaryOperation(/, {"\($0) ÷ \($1)"}),
-        "×" : Operation.binaryOperation(*, {"\($0) × \($1)"}),
-        "−" : Operation.binaryOperation(-, {"\($0) − \($1)"}),
-        "+" : Operation.binaryOperation(+, {"\($0) + \($1)"}),
+        "÷" : Operation.binaryOperation(/, {"(\($0) ÷ \($1))"}),
+        "×" : Operation.binaryOperation(*, {"(\($0) × \($1))"}),
+        "−" : Operation.binaryOperation(-, {"(\($0) − \($1))"}),
+        "+" : Operation.binaryOperation(+, {"(\($0) + \($1))"}),
         "=" : Operation.equals
     ]
     
