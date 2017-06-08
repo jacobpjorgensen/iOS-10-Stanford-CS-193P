@@ -75,7 +75,7 @@ struct CalculatorBrain {
         }
 
         // We assume variable names (Ex: "M") are strings that are not convertible to Double
-        for item in history {
+        for (i, item) in history.enumerated() {
             if let variable = variables?[item] {
                 result = variable
                 description = item
@@ -86,15 +86,19 @@ struct CalculatorBrain {
                 case .binaryOperation(let function): perform(binary: function, op: item)
                 case .equals: performEquals()
                 }
+            } else if Double(item) != nil {
+                result = Double(item) ?? 0.0
+                if i != history.count - 1 { /// Don't update the description if the last item is a number
+                    description = item
+                }
             } else {
-                if Double(item) != nil {
-                    if let lastInHistory = history.last, operations[lastInHistory] != nil || !isPending {
-                        description = item
-                    }
+                result = Double(item) ?? 0.0
+                if variables?[item] != nil, i == history.count - 1 {
+                    // If the last item is a variable, set it as the description
+                    description = item
                 } else {
                     performPendingBinaryDescription(with: item)
                 }
-                result = Double(item) ?? 0.0
             }
             // When undoing, we don't want to display an empty history
             if operations[item] == nil && Double(item) != nil && history.count <= 1 {
@@ -102,25 +106,41 @@ struct CalculatorBrain {
             }
             isPending = pendingBinaryOperation != nil
         }
-        
         return (result, isPending, description)
     }
     
     mutating func performOperation(_ symbol: String) {
         if let lastInHistory = history.last {
-            if symbol == lastInHistory {
-                // Don't append to history if it is the same operation
-                return
+            // Don't append to history if it is the same operation as the last one, unless it is a unary operation
+            if let operation = operations[symbol], symbol == lastInHistory {
+                switch operation {
+                case .unaryOperation: break
+                default: return
+                }
             }
+            // Don't allow adding a unary operation after a binary operation
+            if let operation = operations[symbol], let previousOperation = operations[lastInHistory] {
+                switch operation {
+                case .unaryOperation:
+                    switch previousOperation {
+                    case .binaryOperation: return
+                    default: break
+                    }
+                default: break
+                }
+            }
+            // In the case of a sequence like '7' '+' '=', we should take what is in the display
+            // and use that as the second operand (even though the user wasn't in the middle of typing).
+            // In this case the description would be "7 + 7" with a result of 14.
             if let result = result, symbol == "=", let lastOperation = operations[lastInHistory] {
-                // In the case of a sequence like '7' '+' '=', we should take what is in the display
-                // and use that as the second operand (even though the user wasn't in the middle of typing).
-                // In this case the description would be "7 + 7" with a result of 14.
                 switch lastOperation {
                 case .binaryOperation: setOperand(result)
                 default: break
                 }
             }
+        } else if operations[symbol] != nil {
+            // if the first character isn't a number, use "0" as the starting number
+            history.append("0")
         }
         history.append(symbol)
     }
