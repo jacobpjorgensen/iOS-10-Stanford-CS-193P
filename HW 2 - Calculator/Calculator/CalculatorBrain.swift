@@ -41,7 +41,6 @@ struct CalculatorBrain {
         
         func perform(constant: (value: Double, description: String)) {
             result = constant.value
-            performPendingBinaryDescription(with: constant.description)
         }
         
         func perform(unary: (resultFunction: (Double) -> Double, descriptionFunction: (String) -> String)) {
@@ -78,10 +77,16 @@ struct CalculatorBrain {
         for (i, item) in history.enumerated() {
             if let variable = variables?[item] {
                 result = variable
-                description = item
+                if i != history.count - 1 { /// Don't update the description if the last item is a number
+                    description = item
+                }
             } else if let operation = operations[item] {
                 switch operation {
-                case .constant(let constant): perform(constant: constant)
+                case .constant(let constant):
+                    if i != history.count - 1 {
+                        description = item
+                    }
+                    perform(constant: constant)
                 case .unaryOperation(let function): perform(unary: function)
                 case .binaryOperation(let function): perform(binary: function, op: item)
                 case .equals: performEquals()
@@ -93,10 +98,10 @@ struct CalculatorBrain {
                 }
             } else {
                 result = Double(item) ?? 0.0
-                if variables?[item] != nil, i == history.count - 1 {
+                if i != history.count - 1 {
                     // If the last item is a variable, set it as the description
                     description = item
-                } else {
+                } else if Double(item) == nil {
                     performPendingBinaryDescription(with: item)
                 }
             }
