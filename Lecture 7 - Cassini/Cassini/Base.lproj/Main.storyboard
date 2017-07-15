@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="POC-pQ-NyL">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Image View Controller-->
+        <scene sceneID="7eb-wj-u8z">
+            <objects>
+                <viewController id="POC-pQ-NyL" customClass="ImageViewController" customModule="Cassini" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="aTv-PS-tWh"/>
+                        <viewControllerLayoutGuide type="bottom" id="PQZ-3X-aVP"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="1zj-HW-wcs">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XWS-uu-7pE">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="XWS-uu-7pE" firstAttribute="top" secondItem="1zj-HW-wcs" secondAttribute="top" id="2rb-jg-25X"/>
+                            <constraint firstItem="XWS-uu-7pE" firstAttribute="bottom" secondItem="PQZ-3X-aVP" secondAttribute="top" id="3mm-uo-zRk"/>
+                            <constraint firstItem="XWS-uu-7pE" firstAttribute="leading" secondItem="1zj-HW-wcs" secondAttribute="leading" id="Juh-Sw-67i"/>
+                            <constraint firstAttribute="trailing" secondItem="XWS-uu-7pE" secondAttribute="trailing" id="iXh-t2-0JD"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="scrollView" destination="XWS-uu-7pE" id="WuX-Fd-jh5"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jVc-JX-RoZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5.5999999999999996" y="142.57871064467767"/>
+        </scene>
+    </scenes>
+</document>
