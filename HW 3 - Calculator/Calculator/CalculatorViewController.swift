@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class CalculatorViewController: UIViewController {
     
     @IBOutlet weak var variableLabel: UILabel!
     @IBOutlet weak var history: UILabel!
@@ -130,11 +130,6 @@ class ViewController: UIViewController {
         if result.description == " " || result.description == "" {
             history.text = " "
         }
-    }
-    
-    @IBAction func setRandomNumber(_ sender: UIButton) {
-        userIsInTheMiddleOfTyping = true
-        display.text = CalculatorBrain.doubleToString(Double(arc4random()) / Double(UInt32.max))
     }
     
     private func displayResult() {
