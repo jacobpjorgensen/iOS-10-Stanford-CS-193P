@@ -8,28 +8,38 @@
 
 import UIKit
 
-class GraphViewController: UIViewController {
+class GraphViewController: UIViewController, GraphViewDataSource {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    @IBOutlet weak var graphView: GraphView! {
+        didSet {
+            graphView.dataSource = self
+            
+            let pinchHandler = #selector(GraphView.changeScale(byReactingTo:))
+            let pinchRecognizer = UIPinchGestureRecognizer(target: graphView, action: pinchHandler)
+            graphView.addGestureRecognizer(pinchRecognizer)
+            
+            let panHandler = #selector(GraphView.panGraph(byReactingTo:))
+            let panRecognizer = UIPanGestureRecognizer(target: graphView, action: panHandler)
+            graphView.addGestureRecognizer(panRecognizer)
+            
+            let tapHandler = #selector(GraphView.changeOrigin(byReactingTo:))
+            let tapRecognizer = UITapGestureRecognizer(target: graphView, action: tapHandler)
+            tapRecognizer.numberOfTapsRequired = 2
+            graphView.addGestureRecognizer(tapRecognizer)
 
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        }
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    var function: ((Double) -> Double?)?
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        let xScale = size.width / graphView.bounds.width
+        let yScale = size.height / graphView.bounds.height
+        if let origin = graphView.origin {
+            graphView.origin = CGPoint(x: origin.x * xScale, y: origin.y * yScale)
+        } else {
+            graphView.origin = nil
+        }
     }
-    */
 
 }

@@ -143,10 +143,33 @@ class CalculatorViewController: UIViewController {
         clearHistoryIfNeeded(given: result)
     }
     
-    // MARK: - UI Style
+    // MARK: - Segue & GraphViewController Setup
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        return !brain.resultIsPending && !userIsInTheMiddleOfTyping
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifer = segue.identifier {
+            switch identifer {
+            case "Show Graph":
+                if let vc = segue.destination.childViewControllers[0] as? GraphViewController {
+                    vc.navigationItem.title = titleForGraphViewController
+                    let graphingFunction = { [brain = self.brain] (x: Double) -> Double? in
+                        return brain.evaluate(using: ["M": x]).result
+                    }
+                    vc.function = brain.resultIsPending ? nil : graphingFunction
+                }
+            default: break
+            }
+        }
+    }
+    
+    private var titleForGraphViewController: String {
+        if brain.description == "", let result = brain.result {
+             return CalculatorBrain.doubleToString(result)
+        }
+        return brain.description
     }
 }
 
