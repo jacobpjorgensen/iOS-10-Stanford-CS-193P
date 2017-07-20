@@ -116,10 +116,10 @@ struct CalculatorBrain {
                 default: return
                 }
             }
-            // Don't allow adding a unary operation after a binary operation
+            // Don't allow adding a unary or binary operation after a binary operation
             if let operation = operations[symbol], let previousOperation = operations[lastInHistory] {
                 switch operation {
-                case .unaryOperation:
+                case .unaryOperation, .binaryOperation:
                     switch previousOperation {
                     case .binaryOperation: return
                     default: break
