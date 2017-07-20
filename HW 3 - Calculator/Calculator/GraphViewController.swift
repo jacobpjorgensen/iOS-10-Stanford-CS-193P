@@ -30,15 +30,48 @@ class GraphViewController: UIViewController, GraphViewDataSource {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadOrigin()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        saveOrigin()
+    }
+    
     var function: ((Double) -> Double?)?
+    private var origin: CGPoint? {
+        get {
+            return graphView.origin
+        }
+        set {
+            graphView.origin = newValue
+        }
+    }
+    
+    private let originKey = "origin"
+    
+    private func loadOrigin() {
+        let originString = UserDefaults.standard.string(forKey: originKey)
+        if let originString = originString {
+            origin = CGPointFromString(originString)
+        }
+    }
+    
+    private func saveOrigin() {
+        if let origin = origin {
+            UserDefaults.standard.set(NSStringFromCGPoint(origin), forKey: originKey)
+        }
+    }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         let xScale = size.width / graphView.bounds.width
         let yScale = size.height / graphView.bounds.height
-        if let origin = graphView.origin {
-            graphView.origin = CGPoint(x: origin.x * xScale, y: origin.y * yScale)
+        if let origin = origin {
+            self.origin = CGPoint(x: origin.x * xScale, y: origin.y * yScale)
         } else {
-            graphView.origin = nil
+            self.origin = nil
         }
     }
 

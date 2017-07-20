@@ -13,6 +13,7 @@ class CalculatorViewController: UIViewController {
     @IBOutlet weak var variableLabel: UILabel!
     @IBOutlet weak var history: UILabel!
     @IBOutlet weak var display: UILabel!
+    @IBOutlet weak var graphButton: UIButton!
     
     private var userIsInTheMiddleOfTyping = false
     private var brain = CalculatorBrain()
@@ -99,6 +100,7 @@ class CalculatorViewController: UIViewController {
         displayValue = 0
         userIsInTheMiddleOfTyping = false
         brain = CalculatorBrain()
+        graphButton.isEnabled = false
     }
     
     @IBAction func undo(_ sender: UIButton) {
@@ -135,6 +137,7 @@ class CalculatorViewController: UIViewController {
     private func displayResult() {
         let result = brain.evaluate(using: mVariable)
         displayValue = result.result ?? 0.0
+        graphButton.isEnabled = !result.isPending && result.description != ""
     }
     
     private func displayHistory() {
@@ -158,7 +161,7 @@ class CalculatorViewController: UIViewController {
                     let graphingFunction = { [brain = self.brain] (x: Double) -> Double? in
                         return brain.evaluate(using: ["M": x]).result
                     }
-                    vc.function = brain.resultIsPending ? nil : graphingFunction
+                    vc.function = graphingFunction
                 }
             default: break
             }

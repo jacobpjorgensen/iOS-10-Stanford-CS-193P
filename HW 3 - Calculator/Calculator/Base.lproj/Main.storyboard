@@ -171,7 +171,7 @@
                                                             <action selector="performOperation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vIl-Z9-zuS"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6MS-33-YpH">
+                                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6MS-33-YpH">
                                                         <rect key="frame" x="301" y="0.0" width="74" height="61.5"/>
                                                         <color key="backgroundColor" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <state key="normal" image="Graph">
@@ -500,6 +500,7 @@
                     <navigationItem key="navigationItem" title="Calculator" id="9SN-uQ-MQj"/>
                     <connections>
                         <outlet property="display" destination="cBs-fx-Plb" id="W1f-Hc-Tgy"/>
+                        <outlet property="graphButton" destination="6MS-33-YpH" id="Ecu-QV-8or"/>
                         <outlet property="history" destination="V5c-mJ-J2m" id="u56-SD-lzL"/>
                         <outlet property="variableLabel" destination="xU2-0h-gan" id="yTe-kh-o56"/>
                     </connections>
