@@ -69,31 +69,53 @@ protocol GraphViewDataSource: class {
     private func drawFunction(in rect: CGRect) {
         UIGraphicsGetCurrentContext()?.saveGState()
         orange.set()
-        let path = UIBezierPath()
-        var originalPointWasSet = false
-        if let point = getPoint(for: floor(rect.minX)) {
-            path.move(to: point)
-            originalPointWasSet = true
-        }
-        for index in stride(from: floor(rect.minX), to: floor(rect.maxX), by: 1 / contentScaleFactor) {
-            if let point = getPoint(for: index) {
-                if originalPointWasSet {
-                    path.addLine(to: point)
-                } else {
-                    path.move(to: point)
-                    originalPointWasSet = true
-                }
-            }
-        }
+        let path = createPath(in: rect)
         path.lineWidth = 2.0
         path.stroke()
         UIGraphicsGetCurrentContext()?.restoreGState()
     }
     
-    private func getPoint(for x: CGFloat) -> CGPoint? {
-        if let origin = origin, let y = dataSource?.function?(Double((x - origin.x) / scale)), (y.isNormal || y.isZero) {
-            let point = CGPoint(x: Double(x), y: y)
-            return CGPoint(x: point.x, y: -1 * (point.y * scale) + origin.y)
+    private func createPath(in rect: CGRect) -> UIBezierPath {
+        let path = UIBezierPath()
+        var pathMoved = false
+        for index in stride(from: floor(rect.minX), to: floor(rect.maxX), by: 1 / contentScaleFactor) {
+            if let point = getPoint(for: index) {
+                if !pathMoved {
+                    path.move(to: point)
+                    pathMoved = true
+                } else {
+                    let verticalLimit: CGFloat = 1000 // Used to avoid drawing undefined slopes
+                    let dy = abs(point.y - path.currentPoint.y)
+                    if dy > verticalLimit {
+                        path.move(to: point)
+                    } else {
+                        path.addLine(to: point)
+                    }
+                }
+            }
+        }
+        return path
+    }
+    
+    private func getPoint(for coordinateX: CGFloat) -> CGPoint? {
+        if let functionX = coordinateXToFunctionX(coordinateX: coordinateX),
+            let functionY = dataSource?.function?(functionX), functionY.isNormal || functionY.isZero,
+            let coordinateY = functionYToCoordinateY(functionY: functionY) {
+                return CGPoint(x: coordinateX, y: coordinateY)
+        }
+        return nil
+    }
+    
+    private func coordinateXToFunctionX(coordinateX x: CGFloat) -> Double? {
+        if let origin = origin {
+            return Double((x - origin.x) / scale)
+        }
+        return nil
+    }
+    
+    private func functionYToCoordinateY(functionY y: Double) -> CGFloat? {
+        if let origin = origin {
+            return -1 * CGFloat(y) * scale + origin.y
         }
         return nil
     }

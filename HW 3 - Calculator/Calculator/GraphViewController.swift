@@ -51,27 +51,37 @@ class GraphViewController: UIViewController, GraphViewDataSource {
     }
     
     private let originKey = "origin"
+    private let boundsKey = "bounds"
     
     private func loadOrigin() {
         let originString = UserDefaults.standard.string(forKey: originKey)
         if let originString = originString {
             origin = CGPointFromString(originString)
         }
+        let oldBoundsString = UserDefaults.standard.string(forKey: boundsKey)
+        if let oldBoundsString = oldBoundsString {
+            let oldBounds = CGRectFromString(oldBoundsString)
+            scaleOrigin(from: oldBounds.size, to: view.bounds.size)
+        }
+
     }
     
     private func saveOrigin() {
         if let origin = origin {
             UserDefaults.standard.set(NSStringFromCGPoint(origin), forKey: originKey)
+            UserDefaults.standard.set(NSStringFromCGRect(graphView.bounds), forKey: boundsKey)
         }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        let xScale = size.width / graphView.bounds.width
-        let yScale = size.height / graphView.bounds.height
+        scaleOrigin(from: graphView.bounds.size, to: size)
+    }
+    
+    private func scaleOrigin(from oldSize: CGSize, to newSize: CGSize) {
         if let origin = origin {
+            let xScale = newSize.width / oldSize.width
+            let yScale = newSize.height / oldSize.height
             self.origin = CGPoint(x: origin.x * xScale, y: origin.y * yScale)
-        } else {
-            self.origin = nil
         }
     }
 
