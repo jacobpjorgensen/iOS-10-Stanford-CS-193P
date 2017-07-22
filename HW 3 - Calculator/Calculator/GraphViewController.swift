@@ -31,7 +31,7 @@ class GraphViewController: UIViewController, GraphViewDataSource {
     
     var function: ((Double) -> Double?)?
     
-    // MARK: - Origin Management
+    // MARK: - Origin & Scale Management
     
     private var origin: CGPoint? {
         get {
@@ -43,15 +43,18 @@ class GraphViewController: UIViewController, GraphViewDataSource {
     }
     
     private let originKey = "origin"
+    private let scaleKey = "scale"
     private let boundsKey = "bounds"
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        loadScale()
         loadOrigin()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        saveScale()
         saveOrigin()
     }
     
@@ -66,7 +69,6 @@ class GraphViewController: UIViewController, GraphViewDataSource {
             // In case they start the app from a different orientation than before
             scaleOrigin(from: oldBounds.size, to: view.bounds.size)
         }
-
     }
     
     private func saveOrigin() {
@@ -74,6 +76,17 @@ class GraphViewController: UIViewController, GraphViewDataSource {
             UserDefaults.standard.set(NSStringFromCGPoint(origin), forKey: originKey)
             UserDefaults.standard.set(NSStringFromCGRect(graphView.bounds), forKey: boundsKey)
         }
+    }
+    
+    private func loadScale() {
+        let scale = CGFloat(UserDefaults.standard.double(forKey: scaleKey))
+        if scale != 0.0 {
+            graphView.scale = CGFloat(scale)
+        }
+    }
+    
+    private func saveScale() {
+        UserDefaults.standard.set(Double(graphView.scale), forKey: scaleKey)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
