@@ -26,21 +26,13 @@ class GraphViewController: UIViewController, GraphViewDataSource {
             let tapRecognizer = UITapGestureRecognizer(target: graphView, action: tapHandler)
             tapRecognizer.numberOfTapsRequired = 2
             graphView.addGestureRecognizer(tapRecognizer)
-
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        loadOrigin()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        saveOrigin()
-    }
-    
     var function: ((Double) -> Double?)?
+    
+    // MARK: - Origin Management
+    
     private var origin: CGPoint? {
         get {
             return graphView.origin
@@ -53,6 +45,16 @@ class GraphViewController: UIViewController, GraphViewDataSource {
     private let originKey = "origin"
     private let boundsKey = "bounds"
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadOrigin()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        saveOrigin()
+    }
+    
     private func loadOrigin() {
         let originString = UserDefaults.standard.string(forKey: originKey)
         if let originString = originString {
@@ -61,6 +63,7 @@ class GraphViewController: UIViewController, GraphViewDataSource {
         let oldBoundsString = UserDefaults.standard.string(forKey: boundsKey)
         if let oldBoundsString = oldBoundsString {
             let oldBounds = CGRectFromString(oldBoundsString)
+            // In case they start the app from a different orientation than before
             scaleOrigin(from: oldBounds.size, to: view.bounds.size)
         }
 

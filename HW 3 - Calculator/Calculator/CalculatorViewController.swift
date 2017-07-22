@@ -148,8 +148,17 @@ class CalculatorViewController: UIViewController {
     
     // MARK: - Segue & GraphViewController Setup
     
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        return !brain.resultIsPending && !userIsInTheMiddleOfTyping
+    private var titleForGraphViewController: String {
+        if brain.description == "", let result = brain.result {
+            return CalculatorBrain.doubleToString(result)
+        }
+        return brain.description
+    }
+    
+    private var graphingFunction: ((Double) -> Double?)? {
+        return { [brain = self.brain] (x: Double) -> Double? in
+            return brain.evaluate(using: ["M": x]).result
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -158,9 +167,6 @@ class CalculatorViewController: UIViewController {
             case "Show Graph":
                 if let vc = segue.destination.childViewControllers[0] as? GraphViewController {
                     vc.navigationItem.title = titleForGraphViewController
-                    let graphingFunction = { [brain = self.brain] (x: Double) -> Double? in
-                        return brain.evaluate(using: ["M": x]).result
-                    }
                     vc.function = graphingFunction
                 }
             default: break
@@ -168,11 +174,5 @@ class CalculatorViewController: UIViewController {
         }
     }
     
-    private var titleForGraphViewController: String {
-        if brain.description == "", let result = brain.result {
-             return CalculatorBrain.doubleToString(result)
-        }
-        return brain.description
-    }
 }
 
