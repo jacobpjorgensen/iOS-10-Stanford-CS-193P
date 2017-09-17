@@ -60,12 +60,10 @@ class TweetTableViewCell: UITableViewCell {
         if let profileImageURL = tweet?.user.profileImageURL {
             lastImageURL = profileImageURL
             URLSession.shared.dataTask(with: profileImageURL) { [weak self] data, response, error in
-                if let _self = self, let data = data, error == nil {
-                    DispatchQueue.main.async {
-                        if profileImageURL == _self.lastImageURL {
-                            _self.tweetProfileImageView?.image = UIImage(data: data)
-                        }
-                    }
+                guard let _self = self, let data = data, error == nil else { self?.tweetProfileImageView?.image = nil; return }
+                DispatchQueue.main.async {
+                    guard profileImageURL == _self.lastImageURL else { return }
+                    _self.tweetProfileImageView?.image = UIImage(data: data)
                 }
             }.resume()
         } else {

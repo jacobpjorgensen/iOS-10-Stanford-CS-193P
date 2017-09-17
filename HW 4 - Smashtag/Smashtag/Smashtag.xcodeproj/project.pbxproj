@@ -16,6 +16,7 @@
 		7C7CDD941F258DE6001D2FAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C7CDD921F258DE6001D2FAB /* LaunchScreen.storyboard */; };
 		7C7CDD9D1F259011001D2FAB /* TweetTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7CDD9C1F259011001D2FAB /* TweetTableViewController.swift */; };
 		7CEABFAC1F6EDA2C001091D9 /* TweetDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEABFAB1F6EDA2C001091D9 /* TweetDetailsTableViewController.swift */; };
+		7CEABFB41F6F1520001091D9 /* TweetImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEABFB31F6F1520001091D9 /* TweetImageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,6 +44,7 @@
 		7C7CDD951F258DE6001D2FAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7C7CDD9C1F259011001D2FAB /* TweetTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetTableViewController.swift; sourceTree = "<group>"; };
 		7CEABFAB1F6EDA2C001091D9 /* TweetDetailsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetDetailsTableViewController.swift; sourceTree = "<group>"; };
+		7CEABFB31F6F1520001091D9 /* TweetImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetImageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 				7C7CDD9C1F259011001D2FAB /* TweetTableViewController.swift */,
 				7C6502861F267DAA00B07980 /* TweetTableViewCell.swift */,
 				7CEABFAB1F6EDA2C001091D9 /* TweetDetailsTableViewController.swift */,
+				7CEABFB31F6F1520001091D9 /* TweetImageViewController.swift */,
 				7C7CDD951F258DE6001D2FAB /* Info.plist */,
 				7C7CDD9B1F258FCF001D2FAB /* Supporting Files */,
 			);
@@ -171,6 +174,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CEABFB41F6F1520001091D9 /* TweetImageViewController.swift in Sources */,
 				7C7CDD8A1F258DE6001D2FAB /* AppDelegate.swift in Sources */,
 				7C7CDD9D1F259011001D2FAB /* TweetTableViewController.swift in Sources */,
 				7CEABFAC1F6EDA2C001091D9 /* TweetDetailsTableViewController.swift in Sources */,

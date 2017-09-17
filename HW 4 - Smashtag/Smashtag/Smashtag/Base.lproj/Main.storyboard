@@ -140,7 +140,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="tweetImageView" destination="dX4-Q8-Otm" id="LVp-yl-DFM"/>
-                                    <segue destination="tXY-dv-8Cl" kind="show" id="yHE-tw-jh7"/>
+                                    <segue destination="tXY-dv-8Cl" kind="show" identifier="Tweet Image View Controller" id="yHE-tw-jh7"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Tweet Text Cell" id="fgn-TH-81w" customClass="TweetTextCell" customModule="Smashtag" customModuleProvider="target">
@@ -177,30 +177,41 @@
             </objects>
             <point key="canvasLocation" x="1713" y="133"/>
         </scene>
-        <!--View Controller-->
+        <!--Tweet Image View Controller-->
         <scene sceneID="lXy-R5-6bW">
             <objects>
-                <viewController id="tXY-dv-8Cl" sceneMemberID="viewController">
+                <viewController id="tXY-dv-8Cl" customClass="TweetImageViewController" customModule="Smashtag" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="1SA-9I-3tn"/>
                         <viewControllerLayoutGuide type="bottom" id="6wt-QL-vKK"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="bmS-du-7Aw">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fnE-6E-hen">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                             </scrollView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="zf1-JH-uSx">
+                                <rect key="frame" x="169" y="283" width="37" height="37"/>
+                                <color key="color" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="fnE-6E-hen" firstAttribute="leading" secondItem="bmS-du-7Aw" secondAttribute="leading" id="3wF-6l-QcQ"/>
-                            <constraint firstItem="fnE-6E-hen" firstAttribute="bottom" secondItem="6wt-QL-vKK" secondAttribute="top" id="f4f-GF-6lF"/>
-                            <constraint firstAttribute="trailing" secondItem="fnE-6E-hen" secondAttribute="trailing" id="m4d-h3-Nbx"/>
-                            <constraint firstItem="fnE-6E-hen" firstAttribute="top" secondItem="bmS-du-7Aw" secondAttribute="top" id="qe7-8b-Qfo"/>
+                            <constraint firstItem="fnE-6E-hen" firstAttribute="width" secondItem="bmS-du-7Aw" secondAttribute="width" id="8Qo-XS-2Nf"/>
+                            <constraint firstItem="fnE-6E-hen" firstAttribute="height" secondItem="bmS-du-7Aw" secondAttribute="height" id="VsI-L3-ccZ"/>
+                            <constraint firstItem="zf1-JH-uSx" firstAttribute="centerY" secondItem="bmS-du-7Aw" secondAttribute="centerY" id="Wo1-28-C2d"/>
+                            <constraint firstItem="zf1-JH-uSx" firstAttribute="centerX" secondItem="bmS-du-7Aw" secondAttribute="centerX" id="XEh-X4-HSg"/>
+                            <constraint firstItem="fnE-6E-hen" firstAttribute="centerY" secondItem="bmS-du-7Aw" secondAttribute="centerY" id="rgG-gs-CeR"/>
+                            <constraint firstItem="fnE-6E-hen" firstAttribute="centerX" secondItem="bmS-du-7Aw" secondAttribute="centerX" id="soZ-7e-MWw"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <connections>
+                        <outlet property="scrollView" destination="fnE-6E-hen" id="2WH-Hb-38Q"/>
+                        <outlet property="spinner" destination="zf1-JH-uSx" id="wyX-PQ-xh0"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Ih-HE-KFu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

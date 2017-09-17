@@ -111,6 +111,18 @@ class TweetDetailsTableViewController: UITableViewController {
         present(sfViewController, animated: true)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let indexPath = tableView.indexPathForSelectedRow else { return }
+        if let identifier = segue.identifier, identifier == "Tweet Image View Controller" {
+            if let vc = segue.destination as? TweetImageViewController {
+                switch tweetData[indexPath.section].data {
+                case .images(let mediaItem):
+                    vc.mediaItem = mediaItem[indexPath.row]
+                default: break
+                }
+            }
+        }
+    }
 }
 
 class TweetImageCell: UITableViewCell {
@@ -125,14 +137,12 @@ class TweetImageCell: UITableViewCell {
         if let url = imageURL {
             lastImageURL = url
             URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-                if let _self = self, let data = data, error == nil {
-                    DispatchQueue.main.async {
-                        if url == _self.lastImageURL {
-                            _self.tweetImageView?.image = UIImage(data: data)
-                        }
-                    }
+                guard let _self = self, let data = data, error == nil else { self?.tweetImageView?.image = nil; return }
+                DispatchQueue.main.async {
+                    guard url == _self.lastImageURL else { return }
+                    _self.tweetImageView?.image = UIImage(data: data)
                 }
-                }.resume()
+            }.resume()
         } else {
             tweetImageView?.image = nil
         }
