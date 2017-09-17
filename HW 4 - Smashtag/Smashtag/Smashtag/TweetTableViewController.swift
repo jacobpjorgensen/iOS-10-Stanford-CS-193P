@@ -11,11 +11,7 @@ import Twitter
 
 class TweetTableViewController: UITableViewController, UITextFieldDelegate {
     
-    private var tweets = [Array<Twitter.Tweet>]() {
-        didSet {
-            //            print(tweets)
-        }
-    }
+    private var tweets = [Array<Twitter.Tweet>]()
     
     var searchText: String? {
         didSet {
@@ -66,11 +62,7 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate {
         tableView.rowHeight = UITableViewAutomaticDimension
     }
     
-    @IBOutlet weak var searchTextField: UITextField! {
-        didSet {
-            searchTextField.delegate = self
-        }
-    }
+    @IBOutlet weak var searchTextField: UITextField! { didSet { searchTextField.delegate = self } }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == searchTextField {

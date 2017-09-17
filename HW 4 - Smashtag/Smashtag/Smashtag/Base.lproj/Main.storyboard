@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Tweet Table View Controller-->
+        <!--Search Tweets-->
         <scene sceneID="1DW-2P-NP8">
             <objects>
-                <tableViewController id="kz5-uV-G7o" customClass="TweetTableViewController" customModule="Smashtag" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="Tweet Table View Controller" id="kz5-uV-G7o" customClass="TweetTableViewController" customModule="Smashtag" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="96" sectionHeaderHeight="28" sectionFooterHeight="28" id="QvM-Pf-eT6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -95,7 +95,7 @@
                             <outlet property="delegate" destination="kz5-uV-G7o" id="aIa-RB-478"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="M6W-79-Mlr"/>
+                    <navigationItem key="navigationItem" title="Search Tweets" id="M6W-79-Mlr"/>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="fpF-Zq-gah">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -111,10 +111,10 @@
             </objects>
             <point key="canvasLocation" x="999.20000000000005" y="132.68365817091455"/>
         </scene>
-        <!--Tweet Details Table View Controller-->
+        <!--Tweet Details-->
         <scene sceneID="zIh-xo-DV2">
             <objects>
-                <tableViewController id="Jmu-7X-vdh" customClass="TweetDetailsTableViewController" customModule="Smashtag" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Tweet Details" id="Jmu-7X-vdh" customClass="TweetDetailsTableViewController" customModule="Smashtag" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="pj6-cg-4za">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -140,13 +140,14 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="tweetImageView" destination="dX4-Q8-Otm" id="LVp-yl-DFM"/>
+                                    <segue destination="tXY-dv-8Cl" kind="show" id="yHE-tw-jh7"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Tweet Text Cell" id="fgn-TH-81w" customClass="TweetTextCell" customModule="Smashtag" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Tweet Text Cell" id="fgn-TH-81w" customClass="TweetTextCell" customModule="Smashtag" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="222" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fgn-TH-81w" id="1WF-bz-cSP">
-                                    <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yVD-4x-zjn">
@@ -174,7 +175,36 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ckz-yv-OAJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1768.8" y="132.68365817091455"/>
+            <point key="canvasLocation" x="1713" y="133"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="lXy-R5-6bW">
+            <objects>
+                <viewController id="tXY-dv-8Cl" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1SA-9I-3tn"/>
+                        <viewControllerLayoutGuide type="bottom" id="6wt-QL-vKK"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="bmS-du-7Aw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fnE-6E-hen">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="fnE-6E-hen" firstAttribute="leading" secondItem="bmS-du-7Aw" secondAttribute="leading" id="3wF-6l-QcQ"/>
+                            <constraint firstItem="fnE-6E-hen" firstAttribute="bottom" secondItem="6wt-QL-vKK" secondAttribute="top" id="f4f-GF-6lF"/>
+                            <constraint firstAttribute="trailing" secondItem="fnE-6E-hen" secondAttribute="trailing" id="m4d-h3-Nbx"/>
+                            <constraint firstItem="fnE-6E-hen" firstAttribute="top" secondItem="bmS-du-7Aw" secondAttribute="top" id="qe7-8b-Qfo"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3Ih-HE-KFu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2416.8000000000002" y="133.5832083958021"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="msI-lx-Mic">

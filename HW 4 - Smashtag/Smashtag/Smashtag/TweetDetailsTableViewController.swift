@@ -8,14 +8,13 @@
 
 import UIKit
 import Twitter
+import SafariServices
 
 class TweetDetailsTableViewController: UITableViewController {
     
     var tweet: Twitter.Tweet? { didSet { setupTweetData() } }
     
     private var tweetData = [(title: String, data: TweetData, count: Int)]()
-    
-    private let defaultCellHeight: CGFloat = 44.0
     
     private enum TweetData {
         case images ([MediaItem])
@@ -51,11 +50,13 @@ class TweetDetailsTableViewController: UITableViewController {
             if let cell = tableView.dequeueReusableCell(withIdentifier: "Tweet Image Cell", for: indexPath) as? TweetImageCell {
                 let mediaItem = mediaItems[indexPath.row]
                 cell.imageURL = mediaItem.url
+                return cell
             }
         case .hashtags(let mentions), .userMentions(let mentions), .urls(let mentions):
             if let cell = tableView.dequeueReusableCell(withIdentifier: "Tweet Text Cell", for: indexPath) as? TweetTextCell {
                 let mention = mentions[indexPath.row]
                 cell.tweetLabel?.text = mention.keyword
+                return cell
             }
         }
         return UITableViewCell()
@@ -81,21 +82,34 @@ class TweetDetailsTableViewController: UITableViewController {
         switch tweetData.data {
         case .images(let mediaItems):
             let aspectRatio = CGFloat(mediaItems[indexPath.row].aspectRatio)
-            guard aspectRatio != 0 else { return defaultCellHeight }
+            guard aspectRatio != 0 else { return UITableViewAutomaticDimension }
             return tableView.frame.width / aspectRatio
-        case .hashtags, .userMentions, .urls: return defaultCellHeight
+        default: return UITableViewAutomaticDimension
         }
     }
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch tweetData[indexPath.section].data {
+        case .hashtags(let mentions), .userMentions(let mentions): presentSearch(from: mentions[indexPath.row].keyword)
+        case .urls(let mentions): presentSafari(from: mentions[indexPath.row].keyword)
+        default: break
+        }
+    }
+    
+    private func presentSearch(from text: String) {
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let identifier = "Tweet Table View Controller"
+        guard let tweetTableVC = mainStoryboard.instantiateViewController(withIdentifier: identifier) as? TweetTableViewController else { return }
+        tweetTableVC.searchText = text
+        tweetTableVC.searchTextField.text = text
+        show(tweetTableVC, sender: true)
+    }
+    
+    private func presentSafari(from urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+        let sfViewController = SFSafariViewController(url: url)
+        present(sfViewController, animated: true)
+    }
     
 }
 
@@ -131,7 +145,7 @@ class TweetTextCell: UITableViewCell {
     @IBOutlet weak var tweetLabel: UILabel?
     
     var tweetText: String? { didSet { updateUI() } }
-
+    
     private func updateUI() {
         tweetLabel?.text = tweetText
     }
