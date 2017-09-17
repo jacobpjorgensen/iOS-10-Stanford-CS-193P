@@ -18,19 +18,62 @@ class TweetTableViewCell: UITableViewCell {
     
     var tweet: Twitter.Tweet? { didSet { updateUI() } }
     
+    private var lastImageURL: URL?
+    
+    private let hashtagColor = UIColor(red: 255/255, green: 45/255, blue: 85/255, alpha: 1)
+    private let urlColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1)
+    private let mentionColor = UIColor(red: 255/255, green: 149/255, blue: 0/255, alpha: 1)
+    
     private func updateUI() {
-        tweetTextLabel?.text = tweet?.text
-        tweetUserLabel?.text = tweet?.user.description
-        
-        if let profileImageURL = tweet?.user.profileImageURL {
-            // FIXME: blocks main thread
-            if let imageData = try? Data(contentsOf: profileImageURL) {
-                tweetProfileImageView?.image = UIImage(data: imageData)
+        updateTweetText()
+        updateTweetUserLabel()
+        updateProfileImage()
+        updateTweetCreatedLabel()
+    }
+    
+    private func updateTweetText() {
+        guard let text = tweet?.text else { return }
+        let mutableAttributedString = NSMutableAttributedString(string: text)
+        if let hashtags = tweet?.hashtags {
+            for hashtag in hashtags {
+                mutableAttributedString.addAttribute(NSForegroundColorAttributeName, value: hashtagColor, range: hashtag.nsrange)
             }
+        }
+        if let urls = tweet?.urls {
+            for url in urls {
+                mutableAttributedString.addAttribute(NSForegroundColorAttributeName, value: urlColor, range: url.nsrange)
+            }
+        }
+        if let mentions = tweet?.userMentions {
+            for mention in mentions {
+                mutableAttributedString.addAttribute(NSForegroundColorAttributeName, value: mentionColor, range: mention.nsrange)
+            }
+        }
+        tweetTextLabel?.attributedText = mutableAttributedString
+    }
+    
+    private func updateTweetUserLabel() {
+        tweetUserLabel?.text = tweet?.user.description
+    }
+    
+    private func updateProfileImage() {
+        if let profileImageURL = tweet?.user.profileImageURL {
+            lastImageURL = profileImageURL
+            URLSession.shared.dataTask(with: profileImageURL) { [weak self] data, response, error in
+                if let _self = self, let data = data, error == nil {
+                    DispatchQueue.main.async {
+                        if profileImageURL == _self.lastImageURL {
+                            _self.tweetProfileImageView?.image = UIImage(data: data)
+                        }
+                    }
+                }
+            }.resume()
         } else {
             tweetProfileImageView?.image = nil
         }
-        
+    }
+    
+    private func updateTweetCreatedLabel() {
         if let created = tweet?.created {
             let formatter = DateFormatter()
             if Date().timeIntervalSince(created) > 24*60*60 {

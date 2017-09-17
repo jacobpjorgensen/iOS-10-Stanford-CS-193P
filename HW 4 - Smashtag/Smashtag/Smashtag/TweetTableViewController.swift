@@ -13,7 +13,7 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate {
     
     private var tweets = [Array<Twitter.Tweet>]() {
         didSet {
-            print(tweets)
+//            print(tweets)
         }
     }
     
@@ -94,8 +94,6 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate {
         
         // Configure the cell...
         let tweet: Tweet = tweets[indexPath.section][indexPath.row]
-//        cell.textLabel?.text = tweet.text
-//        cell.detailTextLabel?.text = tweet.user.name
         if let tweetCell = cell as? TweetTableViewCell {
             tweetCell.tweet = tweet
         }
