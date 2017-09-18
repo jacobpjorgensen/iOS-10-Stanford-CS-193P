@@ -17,6 +17,8 @@
 		7C7CDD9D1F259011001D2FAB /* TweetTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7CDD9C1F259011001D2FAB /* TweetTableViewController.swift */; };
 		7CEABFAC1F6EDA2C001091D9 /* TweetDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEABFAB1F6EDA2C001091D9 /* TweetDetailsTableViewController.swift */; };
 		7CEABFB41F6F1520001091D9 /* TweetImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEABFB31F6F1520001091D9 /* TweetImageViewController.swift */; };
+		EE4749861F700513003BCD56 /* RecentSearchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4749851F700513003BCD56 /* RecentSearchesTableViewController.swift */; };
+		EE4749881F700618003BCD56 /* RecentSearchesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4749871F700618003BCD56 /* RecentSearchesStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +47,8 @@
 		7C7CDD9C1F259011001D2FAB /* TweetTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetTableViewController.swift; sourceTree = "<group>"; };
 		7CEABFAB1F6EDA2C001091D9 /* TweetDetailsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetDetailsTableViewController.swift; sourceTree = "<group>"; };
 		7CEABFB31F6F1520001091D9 /* TweetImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetImageViewController.swift; sourceTree = "<group>"; };
+		EE4749851F700513003BCD56 /* RecentSearchesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchesTableViewController.swift; sourceTree = "<group>"; };
+		EE4749871F700618003BCD56 /* RecentSearchesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchesStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +88,8 @@
 				7C6502861F267DAA00B07980 /* TweetTableViewCell.swift */,
 				7CEABFAB1F6EDA2C001091D9 /* TweetDetailsTableViewController.swift */,
 				7CEABFB31F6F1520001091D9 /* TweetImageViewController.swift */,
+				EE4749851F700513003BCD56 /* RecentSearchesTableViewController.swift */,
+				EE4749871F700618003BCD56 /* RecentSearchesStore.swift */,
 				7C7CDD951F258DE6001D2FAB /* Info.plist */,
 				7C7CDD9B1F258FCF001D2FAB /* Supporting Files */,
 			);
@@ -178,6 +184,8 @@
 				7C7CDD8A1F258DE6001D2FAB /* AppDelegate.swift in Sources */,
 				7C7CDD9D1F259011001D2FAB /* TweetTableViewController.swift in Sources */,
 				7CEABFAC1F6EDA2C001091D9 /* TweetDetailsTableViewController.swift in Sources */,
+				EE4749881F700618003BCD56 /* RecentSearchesStore.swift in Sources */,
+				EE4749861F700513003BCD56 /* RecentSearchesTableViewController.swift in Sources */,
 				7C6502871F267DAA00B07980 /* TweetTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
