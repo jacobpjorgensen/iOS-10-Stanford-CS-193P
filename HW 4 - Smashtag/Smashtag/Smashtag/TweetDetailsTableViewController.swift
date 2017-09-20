@@ -27,7 +27,7 @@ class TweetDetailsTableViewController: UITableViewController {
         if let tweet = tweet {
             tweetData = [("Images", TweetData.images(tweet.media), tweet.media.count),
                          ("Hashtags", TweetData.hashtags(tweet.hashtags), tweet.hashtags.count),
-                         ("Mentions", TweetData.userMentions(tweet.userMentions), tweet.userMentions.count),
+                         ("Mentions by @\(tweet.user.screenName)", TweetData.userMentions(tweet.userMentions), tweet.userMentions.count),
                          ("URLs", TweetData.urls(tweet.urls), tweet.urls.count)
             ]
         }
@@ -90,7 +90,10 @@ class TweetDetailsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch tweetData[indexPath.section].data {
-        case .hashtags(let mentions), .userMentions(let mentions): presentSearch(from: mentions[indexPath.row].keyword)
+        case .hashtags(let mentions): presentSearch(from: mentions[indexPath.row].keyword)
+        case .userMentions(let mentions):
+            let mention = mentions[indexPath.row].keyword
+            presentSearch(from: "\(mention) OR from:\(mention)")
         case .urls(let mentions): presentSafari(from: mentions[indexPath.row].keyword)
         default: break
         }
