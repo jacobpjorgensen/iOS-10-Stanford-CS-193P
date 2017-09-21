@@ -19,6 +19,7 @@
 		7CEABFB41F6F1520001091D9 /* TweetImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEABFB31F6F1520001091D9 /* TweetImageViewController.swift */; };
 		EE4749861F700513003BCD56 /* RecentSearchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4749851F700513003BCD56 /* RecentSearchesTableViewController.swift */; };
 		EE4749881F700618003BCD56 /* RecentSearchesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4749871F700618003BCD56 /* RecentSearchesStore.swift */; };
+		EE4FE0441F740987006A3B1F /* TweetImagesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4FE0431F740987006A3B1F /* TweetImagesCollectionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +50,7 @@
 		7CEABFB31F6F1520001091D9 /* TweetImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetImageViewController.swift; sourceTree = "<group>"; };
 		EE4749851F700513003BCD56 /* RecentSearchesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchesTableViewController.swift; sourceTree = "<group>"; };
 		EE4749871F700618003BCD56 /* RecentSearchesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchesStore.swift; sourceTree = "<group>"; };
+		EE4FE0431F740987006A3B1F /* TweetImagesCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetImagesCollectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				7C7CDD8D1F258DE6001D2FAB /* Main.storyboard */,
 				7C7CDD9C1F259011001D2FAB /* TweetTableViewController.swift */,
 				7C6502861F267DAA00B07980 /* TweetTableViewCell.swift */,
+				EE4FE0431F740987006A3B1F /* TweetImagesCollectionViewController.swift */,
 				7CEABFAB1F6EDA2C001091D9 /* TweetDetailsTableViewController.swift */,
 				7CEABFB31F6F1520001091D9 /* TweetImageViewController.swift */,
 				EE4749851F700513003BCD56 /* RecentSearchesTableViewController.swift */,
@@ -187,6 +190,7 @@
 				7CEABFAC1F6EDA2C001091D9 /* TweetDetailsTableViewController.swift in Sources */,
 				EE4749881F700618003BCD56 /* RecentSearchesStore.swift in Sources */,
 				EE4749861F700513003BCD56 /* RecentSearchesTableViewController.swift in Sources */,
+				EE4FE0441F740987006A3B1F /* TweetImagesCollectionViewController.swift in Sources */,
 				7C6502871F267DAA00B07980 /* TweetTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

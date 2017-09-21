@@ -98,7 +98,11 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Search" id="M6W-79-Mlr">
                         <rightBarButtonItems>
-                            <barButtonItem title="Images" id="kMa-Kb-YT2"/>
+                            <barButtonItem title="Images" id="kMa-Kb-YT2">
+                                <connections>
+                                    <segue destination="Rsb-nW-GBg" kind="presentation" modalTransitionStyle="flipHorizontal" id="8rY-Dg-EhI"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem title=" Home" id="jyB-zj-K8x">
                                 <connections>
                                     <action selector="popToRoot:" destination="kz5-uV-G7o" id="wqP-5h-xe5"/>
@@ -122,6 +126,63 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cfG-6i-6OQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2082" y="132"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="7MB-yS-fox">
+            <objects>
+                <navigationController id="Rsb-nW-GBg" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="kj8-Qs-nc2">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="gn7-wW-LU2" kind="relationship" relationship="rootViewController" id="1lf-qW-SZk"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VcA-le-0CE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2873" y="-538"/>
+        </scene>
+        <!--Tweet Images Collection View Controller-->
+        <scene sceneID="40n-Hu-E1a">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gzG-dT-Igr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <collectionViewController id="gn7-wW-LU2" customClass="TweetImagesCollectionViewController" customModule="Smashtag" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="saJ-cc-cEU">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="AU2-a4-Pg0">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="aVY-r7-ux9">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="gn7-wW-LU2" id="T8R-58-aUB"/>
+                            <outlet property="delegate" destination="gn7-wW-LU2" id="v0w-WK-gXW"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="DC7-WE-8zk">
+                        <barButtonItem key="rightBarButtonItem" title="List" id="ZP5-zk-oXU">
+                            <connections>
+                                <action selector="dismiss:" destination="gn7-wW-LU2" id="9QL-Bb-a5p"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </collectionViewController>
+            </objects>
+            <point key="canvasLocation" x="3665" y="-538"/>
         </scene>
         <!--Tweet Details-->
         <scene sceneID="zIh-xo-DV2">
