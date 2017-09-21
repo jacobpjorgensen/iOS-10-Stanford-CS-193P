@@ -37,7 +37,7 @@ class RecentSearchesStore {
         RecentSearchesStore.save(recentSearches: recentSearches)
     }
     
-    private static func save(recentSearches: [RecentSearch]) {
+    static func save(recentSearches: [RecentSearch]) {
         let archiveArray = NSMutableArray()
         for recentSearch in recentSearches {
             let encodedObject = NSKeyedArchiver.archivedData(withRootObject: recentSearch)

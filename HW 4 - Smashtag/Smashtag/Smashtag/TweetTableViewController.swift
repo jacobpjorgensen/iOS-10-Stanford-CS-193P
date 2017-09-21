@@ -11,10 +11,6 @@ import Twitter
 
 class TweetTableViewController: UITableViewController, UITextFieldDelegate {
     
-    private var tweets = [Array<Twitter.Tweet>]()
-    
-    private var recentSearches = [RecentSearch]()
-    
     var searchText: String? {
         didSet {
             searchTextField?.text = searchText
@@ -27,6 +23,12 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate {
             RecentSearchesStore.saveRecentSearch(text: searchText)
         }
     }
+    
+    @IBOutlet weak var homeBarButton: UIBarButtonItem!
+    @IBOutlet weak var imagesBarButton: UIBarButtonItem!
+    
+    private var tweets = [Array<Twitter.Tweet>]()
+    private var recentSearches = [RecentSearch]()
     
     private func twitterRequest() -> Twitter.Request? {
         if let query = searchText, !query.isEmpty {
@@ -63,6 +65,15 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate {
         super.viewDidLoad()
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.rowHeight = UITableViewAutomaticDimension
+        removeHomeBarButtonIfNeeded()
+    }
+    
+    private func removeHomeBarButtonIfNeeded() {
+        guard let root = navigationController?.viewControllers[0], root == self,
+            var rightItems = navigationItem.rightBarButtonItems,
+            rightItems.count > 1 else { return }
+        rightItems.remove(at: 1)
+        navigationItem.setRightBarButtonItems(rightItems, animated: false)
     }
     
     @IBOutlet weak var searchTextField: UITextField! { didSet { searchTextField.delegate = self } }
@@ -72,6 +83,12 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate {
             searchText = searchTextField.text
         }
         return true
+    }
+    
+    // MARK: - Bar Button
+    
+    @IBAction func popToRoot(_ sender: UIBarButtonItem) {
+        navigationController?.popToRootViewController(animated: true)
     }
     
     // MARK: - UITableViewDataSource
