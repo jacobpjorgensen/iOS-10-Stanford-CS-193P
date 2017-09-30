@@ -27,7 +27,7 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var homeBarButton: UIBarButtonItem!
     @IBOutlet weak var imagesBarButton: UIBarButtonItem!
     
-    private var tweets = [Array<Twitter.Tweet>]()
+    var tweets = [Array<Twitter.Tweet>]()
     private var recentSearches = [RecentSearch]()
     
     private func twitterRequest() -> Twitter.Request? {
@@ -127,6 +127,16 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate {
                     if let index = tableView.indexPathForSelectedRow {
                         vc.tweet = tweets[index.section][index.row]
                     }
+                }
+            case "TweetImages":
+                if let nav = segue.destination as? UINavigationController, let vc = nav.viewControllers.first as? TweetImagesCollectionViewController {
+                    var tweets = [Tweet]()
+                    for tweetArray in self.tweets {
+                        for tweet in tweetArray {
+                            tweets.append(tweet)
+                        }
+                    }
+                    vc.tweets = tweets
                 }
             default: break
             }

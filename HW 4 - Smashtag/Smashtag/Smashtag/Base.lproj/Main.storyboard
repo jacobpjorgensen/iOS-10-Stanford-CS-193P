@@ -100,7 +100,7 @@
                         <rightBarButtonItems>
                             <barButtonItem title="Images" id="kMa-Kb-YT2">
                                 <connections>
-                                    <segue destination="Rsb-nW-GBg" kind="presentation" modalTransitionStyle="flipHorizontal" id="8rY-Dg-EhI"/>
+                                    <segue destination="Rsb-nW-GBg" kind="presentation" identifier="TweetImages" modalTransitionStyle="flipHorizontal" id="8rY-Dg-EhI"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title=" Home" id="jyB-zj-K8x">
@@ -146,26 +146,39 @@
         <!--Tweet Images Collection View Controller-->
         <scene sceneID="40n-Hu-E1a">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gzG-dT-Igr" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <collectionViewController id="gn7-wW-LU2" customClass="TweetImagesCollectionViewController" customModule="Smashtag" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="saJ-cc-cEU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="AU2-a4-Pg0">
-                            <size key="itemSize" width="50" height="50"/>
+                            <size key="itemSize" width="100" height="100"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="aVY-r7-ux9">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TweetImageCell" id="aVY-r7-ux9" customClass="TweetImageCollectionViewCell" customModule="Smashtag" customModuleProvider="target">
+                                <rect key="frame" x="10" y="10" width="100" height="100"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hmD-ZH-Ie3">
+                                            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                        </imageView>
+                                    </subviews>
                                 </view>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="hmD-ZH-Ie3" secondAttribute="trailing" id="WFm-wG-6J5"/>
+                                    <constraint firstItem="hmD-ZH-Ie3" firstAttribute="leading" secondItem="aVY-r7-ux9" secondAttribute="leading" id="agu-vf-eRE"/>
+                                    <constraint firstItem="hmD-ZH-Ie3" firstAttribute="top" secondItem="aVY-r7-ux9" secondAttribute="top" id="raC-Wo-qLv"/>
+                                    <constraint firstAttribute="bottom" secondItem="hmD-ZH-Ie3" secondAttribute="bottom" id="zoF-Rd-5vm"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="tweetImageView" destination="hmD-ZH-Ie3" id="6jY-Tl-LT0"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -181,8 +194,9 @@
                         </barButtonItem>
                     </navigationItem>
                 </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gzG-dT-Igr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3665" y="-538"/>
+            <point key="canvasLocation" x="3664.8000000000002" y="-538.38080959520244"/>
         </scene>
         <!--Tweet Details-->
         <scene sceneID="zIh-xo-DV2">

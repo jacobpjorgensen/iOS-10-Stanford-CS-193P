@@ -62,6 +62,20 @@ class RecentSearchesTableViewController: UITableViewController {
         RecentSearchesStore.save(recentSearches: recentSearches)
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let searchText = recentSearches[indexPath.row].searchText else { return }
+        presentSearch(from: searchText)
+    }
+    
+    private func presentSearch(from text: String) {
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let identifier = "Tweet Table View Controller"
+        guard let tweetTableVC = mainStoryboard.instantiateViewController(withIdentifier: identifier) as? TweetTableViewController else { return }
+        tweetTableVC.searchText = text
+        tweetTableVC.searchTextField.text = text
+        show(tweetTableVC, sender: true)
+    }
+    
 }
 
 class RecentTweetSearchCell: UITableViewCell {

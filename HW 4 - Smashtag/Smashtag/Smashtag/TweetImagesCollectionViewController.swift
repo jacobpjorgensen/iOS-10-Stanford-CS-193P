@@ -7,87 +7,141 @@
 //
 
 import UIKit
+import Twitter
 
 private let reuseIdentifier = "Cell"
 
 class TweetImagesCollectionViewController: UICollectionViewController {
-
+    
+    var tweets = [Tweet]() { didSet { setupTweetImages() } }
+    
+    fileprivate var tweetImages = [TweetImage]()
+    
+    private var imageCache = NSCache<NSURL, UIImage>()
+    
+    fileprivate struct TweetImage {
+        let url: URL
+        let aspectRatio: CGFloat
+        let tweet: Tweet
+    }
+    
+    // Reload instead of invalidate layout to avoid visual glitches
+    fileprivate var pinchScale: CGFloat = 1.0 { didSet { collectionView?.reloadData() } }
+    
+    private func setupTweetImages() {
+        tweetImages = []
+        for tweet in tweets {
+            for media in tweet.media {
+                tweetImages.append(TweetImage(url: media.url, aspectRatio: CGFloat(media.aspectRatio), tweet: tweet))
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        addPinchGesture()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    private func addPinchGesture() {
+        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(pinched(_:)))
+        collectionView?.addGestureRecognizer(pinchGesture)
     }
-
-    /*
+    
+    private var lastPinchScale: CGFloat = 1.0
+    @objc private func pinched(_ sender: UIPinchGestureRecognizer) {
+        pinchScale = sender.scale * lastPinchScale
+        if sender.state == .ended { lastPinchScale = sender.scale * lastPinchScale }
+    }
+    
+    // MARK: - UICollectionViewDataSource
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return tweetImages.count
+    }
+    
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TweetImageCell", for: indexPath) as? TweetImageCollectionViewCell else { return UICollectionViewCell() }
+        cell.imageURL = tweetImages[indexPath.row].url
+        cell.updateImage(with: imageCache)
+        return cell
+    }
+    
+    // MARK: - UICollectionViewDelegate
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let tweet = tweetImages[indexPath.row].tweet
+        presentSearch(from: tweet)
+    }
+    
+    private func presentSearch(from tweet: Tweet) {
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let identifier = "Tweet Table View Controller"
+        guard let tweetTableVC = mainStoryboard.instantiateViewController(withIdentifier: identifier) as? TweetTableViewController else { return }
+        var tweets = [Array<Twitter.Tweet>]()
+        tweets.append([tweet])
+        tweetTableVC.tweets = tweets
+        show(tweetTableVC, sender: true)
+    }
+    
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
     @IBAction func dismiss(_ sender: UIBarButtonItem) {
         dismiss(animated: true)
     }
-
-    // MARK: UICollectionViewDataSource
-
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
-
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 0
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
     
-        // Configure the cell
+}
+
+extension TweetImagesCollectionViewController: UICollectionViewDelegateFlowLayout {
     
-        return cell
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let area: CGFloat = 10000 * pinchScale // Total area for each image. Width and size based on aspect ratio & area.
+        let aspectRatio = tweetImages[indexPath.row].aspectRatio
+        let width = CGFloat(sqrt(Double(area * aspectRatio)))
+        let height = CGFloat(sqrt(Double(area / aspectRatio)))
+        return CGSize(width: width, height: height)
     }
-
-    // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
     
-    }
-    */
+}
 
+class TweetImageCollectionViewCell: UICollectionViewCell {
+    
+    var imageURL: URL?
+    
+    @IBOutlet weak private var tweetImageView: UIImageView!
+    
+    private var lastImageURL: URL?
+    
+    func updateImage(with cache: NSCache<NSURL, UIImage>) {
+        if let imageURL = imageURL {
+            lastImageURL = imageURL
+            if let cachedImage = cache.object(forKey: imageURL as NSURL) {
+                tweetImageView.image = cachedImage
+            } else {
+                updateImage(from: imageURL, with: cache)
+            }
+        } else {
+            tweetImageView.image = nil
+        }
+    }
+    
+    private func updateImage(from url: URL, with cache: NSCache<NSURL, UIImage>) {
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let _self = self, let data = data, error == nil else { self?.tweetImageView?.image = nil; return }
+            DispatchQueue.main.async {
+                guard _self.imageURL == _self.lastImageURL, let image = UIImage(data: data) else { return }
+                _self.tweetImageView?.image = image
+                cache.setObject(image, forKey: url as NSURL)
+            }
+        }.resume()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        tweetImageView.image = nil
+    }
+    
 }
