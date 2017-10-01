@@ -45,8 +45,7 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate {
             request.fetchTweets { [weak self] newTweets in
                 DispatchQueue.main.async {
                     if request == self?.lastTwitterRequest {
-                        self?.tweets.insert(newTweets, at: 0)
-                        self?.tableView.insertSections([0], with: .fade)
+                        self?.insertTweets(newTweets)
                     }
                     self?.refreshControl?.endRefreshing()
                 }
@@ -56,6 +55,10 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    func insertTweets(_ newTweets: [Twitter.Tweet]) {
+        tweets.insert(newTweets, at: 0)
+        tableView.insertSections([0], with: .fade)
+    }
     
     @IBAction func refresh(_ sender: UIRefreshControl) {
         searchForTweets()

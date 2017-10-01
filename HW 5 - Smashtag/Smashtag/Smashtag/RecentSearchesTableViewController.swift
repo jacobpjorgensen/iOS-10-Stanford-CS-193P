@@ -50,6 +50,15 @@ class RecentSearchesTableViewController: UITableViewController {
         return cell ?? UITableViewCell()
     }
     
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: "PopularMentions") as? PopularMentionsTableViewController else { return }
+        let recentSearch = recentSearches[indexPath.row].searchText
+        vc.searchTerm = recentSearch
+        vc.container = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer
+        show(vc, sender: self)
+    }
+    
     // MARK: - Editing
     
     // Override to support editing the table view.
